@@ -1,19 +1,14 @@
 <?php
-    session_start();
-    require 'db.php';
+require "db.php";
+session_start();
 
-    if(isset($_SESSION['email'])){
-        header("Location: index.php");
-        exit;
-    }
-
-    if($_POST) {
+if($_POST) {
         $email = $_POST['email'];
         $password = $_POST['password'];
         if(login($email,$password)) {
             // $_SESSION['password'] = $password;
             $_SESSION['email'] = $email;
-            header("Location: index.php"); // redirect to index.php
+            header("Location: driver_dashboard.php"); // redirect to index.php
             exit();
         } else {
             echo "Error LOL";
@@ -34,7 +29,7 @@
 </head>
 <body bgcolor="Black">
     <div class="login">
-        <h1>Welcome!</h1>
+        <h1>Drivers login!</h1>
         <form class="registration-form" method="POST">
             
             <div class="form-group">

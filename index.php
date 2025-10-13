@@ -1,27 +1,31 @@
 <?php
-    require "db.php";
-    session_start();
+require "db.php";
+session_start();
 
-    if(!isset($_SESSION['email'])){
-    header("Location: login.php");
+if (!isset($_SESSION['email'])) {
+    header(header: "Location: login.php");
     exit;
-    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Transport</title>
     <link rel="stylesheet" href="styles/index.css">
 </head>
+
 <body>
     <div class="dashboard-container">
         <header class="dashboard-header">
             <h1>Student Transport</h1>
+
             <div class="user-info">
-                <span>Welcome, User</span>
+                <?php echo "<span>Welcome,". $_SESSION['email']."</span>"; ?>
+                
             </div>
         </header>
         <nav class="dashboard-nav">
@@ -48,11 +52,11 @@
                 </div>
             </section>
             <button class="logout">
-               <a href="logout.php" class="Logout">Logout</a>
-            
+                <a href="logout.php" class="Logout">Logout</a>
+
             </button>
         </main>
     </div>
 </body>
+
 </html>
- 

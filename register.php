@@ -17,11 +17,11 @@
 <head>
     
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=deviedit_userce-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';">
     <title>Registration Page</title>
 
-    <link rel="stylesheet" href="/styles/register.css">
+    <link rel="stylesheet" href="styles/register.css">
 </head>
 <body bgcolor="Black">
     <div class="login">
