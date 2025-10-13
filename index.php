@@ -1,5 +1,11 @@
 <?php
+    require "db.php";
     session_start();
+
+    if(!isset($_SESSION['username'])){
+    header("Location: login.php");
+    exit;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -42,10 +48,8 @@
                 </div>
             </section>
             <button class="logout">
-               <a href="login.php" class="Logout">Logout</a>
-               <?php
-                   
-                ?>
+               <a href="logout.php" class="Logout">Logout</a>
+            
             </button>
         </main>
     </div>
