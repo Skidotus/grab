@@ -1,0 +1,162 @@
+/* style.css */
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    margin: 20px;
+    background-color: white; /* Solid black background */
+    color: rgb(24, 19, 19); /* Default text color set to white for contrast */
+}
+
+h1 {
+    color: rgba(7, 255, 40, 1)reen; /* Heading text color */
+    text-align: center;
+    margin-bottom: 20px;
+   
+}
+
+#map {
+    height: 500px;
+    width: 100%;
+    border: 1px solid #333; /* Darker border for contrast on black */
+    box-shadow:
+        0 0 10px rgba(255, 255, 255, 0.4), /* Lighter glow */
+        0 0 20px rgba(255, 255, 255, 0.2); /* Wider, softer glow */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#info-panel {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #333; /* Darker border */
+    
+    color: black; /* Text inside info panel should be white */
+    border-radius: 8px;
+   
+}
+
+#info-panel h3 {
+    color: black; /* Heading inside info panel */
+    margin-top: 0;
+    border-bottom: 1px solid #555; /* Darker border for the separator */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    /* Optional: Add text shadow to info panel heading as well */
+    
+}
+
+#info-panel p {
+    margin: 8px 0;
+    line-height: 1.5;
+    color: black; /* Slightly off-white for body text */
+}
+
+#info-panel strong {
+    color: black; /* Neon blue/cyan for labels */
+    min-width: 90px;
+    display: inline-block;
+
+}
+
+/* Styling for the search bar container */
+#search-bar-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* Styling for the search bar input */
+#search-bar {
+    width: 60%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Styling for the search button */
+#search-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Hover effect for the search button */
+#search-button:hover {
+    background-color: #0056b3;
+}
+
+/* Updated styling for the booking form to make it full width */
+#booking-form {
+    width: 100%;
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+#booking-form fieldset {
+    border: none;
+    padding: 0;
+}
+
+#booking-form legend {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#booking-form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+#booking-form input,
+#booking-form textarea,
+#booking-form select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#booking-form textarea {
+    resize: vertical;
+}
+
+#booking-form button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#booking-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Optional: Basic responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        margin: 10px;
+    }
+    #map {
+        height: 400px;
+    }
+    #info-panel {
+        margin-top: 20px;
+        padding: 15px;
+    }
+}

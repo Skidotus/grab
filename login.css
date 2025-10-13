@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: Black;
+    font-family: 'Montserrat', sans-serif; /* Changed font to Montserrat */
+}
+
+p {
+    color: #27ae60;
+    font-size: 1.2em;
+    margin-top: 25px;
+    margin-bottom: 0;
+    font-family: 'Montserrat', sans-serif; /* Apply to paragraphs */
+}
+
+.login {
+    background-color: #333;
+    padding: 40px;
+    border-radius: 20px;
+    width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: white;
+}
+
+h1 {
+    color: #27ae60;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif; /* Changed font to Montserrat */
+    margin-bottom: 30px;
+}
+
+label {
+    color: white;
+    font-size: 1.2em;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif; /* Apply to labels for consistency */
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    box-sizing: border-box;
+    background-color: #444;
+    color: white;
+    font-family: 'Montserrat', sans-serif; /* Apply to input fields */
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 50px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+    font-family: 'Montserrat', sans-serif; /* Apply to button */
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+a {
+    color: #00BFFF;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif; /* Apply to link */
+}
+
+a:hover {
+    text-decoration: underline;
+}
