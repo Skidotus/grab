@@ -1,8 +1,8 @@
 <?php
     $servername = '127.0.0.1';
     $dbname = 'student_transport';
-    $dbusername = 'root';
-    $dbpassword = '';
+    $dbusername = 'pma';
+    $dbpassword = 'SuperStrongPass123!';
 
     $connection = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
@@ -25,5 +25,11 @@
         $sql = "SELECT * FROM users";
         $result = $connection->query($sql);
         return $result->fetch_all(MYSQL_ASSOC);
+    }
+
+    function deleteUserByID($id){
+        global $connection;
+        $sql = "DELETE FROM users where id = '$id'";
+        $conn->query($sql);
     }
 ?>

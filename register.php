@@ -21,7 +21,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';">
     <title>Registration Page</title>
 
-    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="/styles/register.css">
 </head>
 <body bgcolor="Black">
     <div class="login">

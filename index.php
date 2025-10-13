@@ -2,7 +2,7 @@
     require "db.php";
     session_start();
 
-    if(!isset($_SESSION['username'])){
+    if(!isset($_SESSION['email'])){
     header("Location: login.php");
     exit;
     }
@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Transport</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="styles/index.css">
 </head>
 <body>
     <div class="dashboard-container">

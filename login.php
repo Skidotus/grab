@@ -6,12 +6,12 @@
         $email = $_POST['email'];
         $password = $_POST['password'];
         if(login($email,$password)) {
-            $_SESSION['password'] = $password;
+            // $_SESSION['password'] = $password;
             $_SESSION['email'] = $email;
             header("Location: index.php"); // redirect to index.php
             exit;
         } else {
-            echo "error lol";
+            echo "Error LOL";
         }
 
         
@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="/styles/login.css">
 </head>
 <body bgcolor="Black">
     <div class="login">
