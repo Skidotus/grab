@@ -30,5 +30,5 @@ $users = selectAllUsers();
     }
     ?>
 </table>
-
+<!-- BUAT USER PROFILE -->
 </html>

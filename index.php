@@ -31,7 +31,7 @@ if (!isset($_SESSION['email'])) {
         <nav class="dashboard-nav">
             <button onclick="window.location.href='booking.html'">Book Transport</button>
             <button onclick="window.location.href='data-display.js'">My Bookings</button>
-            <button onclick="window.location.href='profile.html'">Profile</button>
+            <button onclick="window.location.href='profile.php'">Profile</button>
         </nav>
         <main class="dashboard-main">
             <section class="dashboard-summary">

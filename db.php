@@ -1,8 +1,10 @@
 <?php
     $servername = '127.0.0.1';
     $dbname = 'student_transport';
-    $dbusername = 'pma';
-    $dbpassword = 'SuperStrongPass123!';
+    // $dbusername = 'pma';
+    // $dbpassword = 'SuperStrongPass123!';
+    $dbusername = 'root';
+    $dbpassword = '';
 
     $connection = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
@@ -29,7 +31,27 @@
 
     function deleteUserByID($id){
         global $connection;
-        $sql = "DELETE FROM users where id = '$id'";
+        $sql = "DELETE FROM user_creds where User_ID = '$id'";
         $connection->query($sql);
+    }
+
+    function selectUserByID($id){
+        global $connection;
+        $sql = "SELECT * FROM user_creds where User_ID ='$id'";
+        $result = $connection->query($sql);
+        return $result->fetch_assoc();
+    }
+
+    function updateByID($id, $username, $email, $password){
+        global $connection;
+        $sql = "UPDATE user_creds SET User_Name = '$username', User_Email = '$email', User_Pass = '$password' WHERE User_ID = '$id'";
+        return $connection->query($sql);
+    }
+
+    function selectUserByEmail($email){
+        global $connection;
+        $sql = "SELECT * FROM user_creds where User_Email ='$email'";
+        $result = $connection->query($sql);
+        return $result->fetch_assoc();
     }
 ?>
