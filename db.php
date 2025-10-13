@@ -30,6 +30,6 @@
     function deleteUserByID($id){
         global $connection;
         $sql = "DELETE FROM users where id = '$id'";
-        $conn->query($sql);
+        $connection->query($sql);
     }
 ?>
