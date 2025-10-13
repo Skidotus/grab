@@ -22,9 +22,9 @@
 
     function selectAllUsers(){
         global $connection;
-        $sql = "SELECT * FROM users";
+        $sql = "SELECT * FROM user_creds";
         $result = $connection->query($sql);
-        return $result->fetch_all(MYSQL_ASSOC);
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     function deleteUserByID($id){

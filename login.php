@@ -9,7 +9,7 @@
             // $_SESSION['password'] = $password;
             $_SESSION['email'] = $email;
             header("Location: index.php"); // redirect to index.php
-            exit;
+            exit();
         } else {
             echo "Error LOL";
         }
