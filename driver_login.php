@@ -2,6 +2,11 @@
 require "db.php";
 session_start();
 
+if(isset($_SESSION['email'])){
+    header("Location: driver_dashboard.php");
+    exit() ;
+}
+
 if($_POST) {
         $email = $_POST['email'];
         $password = $_POST['password'];
