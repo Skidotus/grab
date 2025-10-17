@@ -1,0 +1,27 @@
+{
+  "name": "grab",
+  "version": "1.0.0",
+  "description": "Lutfil Haikal Ariff",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skidotus/grab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Skidotus/grab/issues"
+  },
+  "homepage": "https://github.com/Skidotus/grab#readme",
+  "devDependencies": {
+    "tailwindcss": "^4.1.14"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.14"
+  }
+}
