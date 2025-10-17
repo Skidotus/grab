@@ -1,10 +1,10 @@
 <?php
     $servername = '127.0.0.1';
     $dbname = 'student_transport';
-    // $dbusername = 'pma';
-    // $dbpassword = 'SuperStrongPass123!';
-    $dbusername = 'root';
-    $dbpassword = '';
+    $dbusername = 'pma';
+    $dbpassword = 'SuperStrongPass123!';
+    // $dbusername = 'root';
+    // $dbpassword = '';
 
     $connection = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
