@@ -19,8 +19,8 @@ if (!isset($_SESSION["email"])) {
 </head>
 
 <body>
-    <h1 class=" text-3xl font-bold text-clifford"">Hellooo</h1>
-    <div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">Lorem ipseum</div>
+    <h1 class=" p-6 m-2 max-w-sm mx-auto text-3xl font-bold text-clifford"">Driver Dashboard is in different branch dev at the moment. Stay tuned</h1>
+    <div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">Lutfil tengah dev dekat feature/tailwinds/ </div>
     <div class="text-2x"></div>   
 </body>
 </html>
