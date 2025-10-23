@@ -3,7 +3,7 @@ require "db.php";
 session_start();
 
 if (!isset($_SESSION['email'])) {
-    header(header: "Location: login.php");
+    header("Location: login.php");
     exit;
 }
 ?>
@@ -24,15 +24,18 @@ if (!isset($_SESSION['email'])) {
             <h1>Student Transport</h1>
 
             <div class="user-info">
-                <?php echo "<span>Welcome,". $_SESSION['email']."</span>"; ?>
-                
+                <?php echo "<span>Welcome, " . $_SESSION['email'] . "</span>"; ?>
             </div>
         </header>
+
         <nav class="dashboard-nav">
             <button onclick="window.location.href='booking.html'">Book Transport</button>
             <button onclick="window.location.href='data-display.js'">My Bookings</button>
             <button onclick="window.location.href='profile.php'">Profile</button>
+
+            <button onclick="window.location.href='payment.php'">Make Payment</button>
         </nav>
+
         <main class="dashboard-main">
             <section class="dashboard-summary">
                 <h2>Quick Summary</h2>
@@ -51,12 +54,11 @@ if (!isset($_SESSION['email'])) {
                     </div>
                 </div>
             </section>
+
             <button class="logout">
                 <a href="logout.php" class="Logout">Logout</a>
-
             </button>
         </main>
     </div>
 </body>
-
 </html>
