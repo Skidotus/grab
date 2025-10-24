@@ -1,18 +1,15 @@
 <?php
-$servername = '127.0.0.1';  // or 'localhost'
-$dbname = 'student_transport';  // must match your database name in phpMyAdmin
-$dbusername = 'root';  // default MySQL user in XAMPP
-$dbpassword = '';  // no password by default
+$servername = '127.0.0.1';
+$dbname = 'student_transport';
+$dbusername = 'root';
+$dbpassword = '';
 
-// Create connection
 $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// ✅ Functions use $conn (not $connection)
 function register($username, $email, $password) {
     global $conn;
     $sql = "INSERT INTO user_creds (User_Name, User_Email, User_Pass) 
