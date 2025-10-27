@@ -19,6 +19,7 @@ if (!isset($_SESSION["email"])) {
     <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
     <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
 
+
     <!-- <style></style> -->
 
 </head>
@@ -33,11 +34,11 @@ if (!isset($_SESSION["email"])) {
 
             <!-- Below is for search sugggestions -->
             <input class="flex-4 bg-gray-700 p-2 mx-2  rounded-lg w-auto" type="search" id="address-input"
-                placeholder="Search for an address...">
+                placeholder="Search for an address..." list="suggestions-container">
             <datalist id="suggestions-container" class="text-white"></datalist>
             <!-- <div id="suggestions-container"></div> -->
 
-            
+
             <!-- Below button for click at current destination -->
             <button onclick="getLocation()"
                 class="my-2 mx-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Click
@@ -75,12 +76,7 @@ if (!isset($_SESSION["email"])) {
 
 
     <!-- script below -->
-    <script src="scripts/booking.js">
-       
-
-
-    </script>
-
+    <script src="scripts/booking.js"></script>
 </body>
 
 </html>
