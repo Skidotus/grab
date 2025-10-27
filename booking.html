@@ -1,54 +1,165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Select Location on OpenStreetMap</title>
+    <meta charset="UTF-8">
+    <title>Book Transport | OpenStreetMap</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <link rel="stylesheet" href="booking.css">
     <style>
-        #map {
-            height: 500px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+            color: #00ff88;
+        }
+
+        #search-bar-container {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #search-bar {
+            width: 300px;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+        }
+
+        #search-button {
+            background-color: #f9d342;
+            color: #000;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #search-button:hover {
+            background-color: #ffe97a;
+        }
+
+        form {
+            background-color: #1c1c1c;
+            display: inline-block;
+            text-align: left;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        fieldset {
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        legend {
+            color: #f9d342;
+            font-weight: bold;
+            padding: 0 10px;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
             width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 6px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
         }
 
         #info-panel {
             margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
+            padding: 15px;
+            background-color: #111;
+            border-radius: 10px;
+            color: #ccc;
         }
 
         #service-table {
             width: 100%;
             margin-top: 10px;
+            border-collapse: collapse;
         }
 
-        #service-table td,
-        #service-table th {
+        #service-table th,
+        #service-table td {
             padding: 8px;
-            vertical-align: middle;
             text-align: left;
+            border-bottom: 1px solid #333;
         }
 
         #service-table td:first-child {
             text-align: center;
         }
 
+        #submit-button {
+            background-color: #f9d342;
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            margin-top: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        #submit-button:hover {
+            background-color: #ffe97a;
+        }
+
         label[for="terms"] {
             display: block;
             margin-top: 20px;
+            color: #bbb;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 8px;
         }
     </style>
 </head>
 
 <body>
-    <h1>Select a Place on the Map (OpenStreetMap)</h1>
+    <h1>Book Your Ride via OpenStreetMap</h1>
+
     <div id="search-bar-container">
         <input type="text" id="search-bar" placeholder="Search for a location...">
         <button id="search-button">Search</button>
     </div>
-    <form id="booking-form" action="booking_pass.html" method="get">
+
+    <form id="booking-form" action="booking_pass.php" method="post">
         <fieldset>
             <legend>Booking Details</legend>
 
@@ -94,8 +205,10 @@
 
             <label for="payment">Payment Method:</label>
             <select id="payment" name="payment" required>
-                <option value="credit-card">Credit Card</option>
+                <option value="">-- Select Payment Method --</option>
                 <option value="cash">Cash</option>
+                <option value="credit_card">Credit Card</option>
+                <option value="debit_card">Debit Card</option>
                 <option value="ewallet">E-Wallet</option>
                 <option value="qr">QR</option>
             </select>
@@ -133,11 +246,8 @@
                     <td>5</td>
                 </tr>
             </table>
-
-
-
-            <!-- <button type="submit">Submit Booking</button> -->
         </fieldset>
+
         <div id="map"></div>
 
         <div id="info-panel">
@@ -148,12 +258,15 @@
             <p><strong>Place Name:</strong> <span id="place-name"></span></p>
             <p><strong>Place ID/OSM ID:</strong> <span id="osmr-id"></span></p>
         </div>
-        <button type="submit" id="submit-button">Submit Booking</button>
-        <label for="terms">
-            <input type="checkbox" id="terms" name="terms" required>
-            I agree to the terms and conditions
-        </label>
+
+        <div align="center">
+            <button type="submit" id="submit-button">Submit Booking</button><br><br>
+            <label for="terms">
+        <input type="checkbox" name="terms" required>I agree to the terms and conditions</br>
+            </label>
+        </div>
     </form>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 

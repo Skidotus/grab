@@ -2,13 +2,11 @@
 require "db.php";
 session_start();
 
-// ========== CHECK LOGIN ==========
 if (!isset($_SESSION['email'])) {
     header("Location: login.php");
     exit();
 }
 
-// ========== GET USER INFO ==========
 $email = $_SESSION['email'];
 $sql = "SELECT User_ID, User_Name FROM user_creds WHERE User_Email = '$email'";
 $result = $conn->query($sql);
@@ -21,7 +19,6 @@ if ($result->num_rows == 0) {
 $user = $result->fetch_assoc();
 $User_ID = $user['User_ID'];
 
-// ========== PROCESS PAYMENT ==========
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $trip_id = $_POST['trip_id'];
     $amount = $_POST['amount'];
@@ -32,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    // Check if trip belongs to this user
     $checkTrip = "SELECT t.trip_id
                   FROM Trip t
                   JOIN Booking b ON b.booking_number = t.booking_number
@@ -44,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    // Insert payment record
     $insertPayment = "INSERT INTO Payment (trip_id, User_ID, amount, method, status, paid_at)
                       VALUES ('$trip_id', '$User_ID', '$amount', '$method', 'Paid', NOW())";
 
@@ -65,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </head>
         <body>
         <div class="box">
-            <h2>✅ Payment Successful!</h2>
+            <h2>Payment Successful!</h2>
             <p>Trip ID: <?php echo $trip_id; ?></p>
             <p>Amount Paid: RM <?php echo number_format($amount, 2); ?></p>
             <p>Payment Method: <?php echo ucfirst(str_replace('_', ' ', $method)); ?></p>
@@ -81,9 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// ========== DISPLAY PAYMENT FORM ==========
-
-// Try to find unpaid trip first
 $sqlTrip = "SELECT t.trip_id, t.fare_amount, t.distance_km, t.booking_number
             FROM Trip t
             JOIN Booking b ON b.booking_number = t.booking_number
@@ -93,7 +85,6 @@ $sqlTrip = "SELECT t.trip_id, t.fare_amount, t.distance_km, t.booking_number
             LIMIT 1";
 $resultTrip = $conn->query($sqlTrip);
 
-// Fallback to latest trip if no unpaid found
 if ($resultTrip->num_rows == 0) {
     $sqlTrip = "SELECT t.trip_id, t.fare_amount, t.distance_km, t.booking_number
                 FROM Trip t
