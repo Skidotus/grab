@@ -20,42 +20,42 @@ $pending_bookings = select_pending_bookings();
     <link href="./styles/output.css" rel="stylesheet">
 </head>
 
-<body>
-    <div class=" w-auto my-5 mx-8 p-2 shadow-lg rounded-2xl border-gray-50 flex gap-2">
-        <div class="flex-1 p-2 flex flex-col text-gray-500 border-2 border-gray-200 rounded-2xl">
+<body class="bg-gray-900 text-white">
+    <div class="w-auto my-2 mx-8  p-2 shadow-lg rounded-lg  flex gap-2">
+        <div class="flex-1 p-2 flex flex-col border-2 border-gray-200 rounded-lg">
             <?php
             echo '
-            <a class="rounded-2xl my-2 p-2 hover:bg-gray-100" href="driver_profile.php?id=">Driver Profile</a>
-            <a class="rounded-2xl my-2 p-2 hover:bg-gray-100" href="driver_booking.php?id=">Driver Booking</a>
-            <a class="rounded-2xl my-2 p-2 hover:bg-gray-100" href="">Help</a>
+            <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_profile.php?id=">Driver Profile</a>
+            <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_booking.php?id=">Driver Booking</a>
+            <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="">Help</a>
             ';
             ?>
         </div>
-        <div class="flex-2 p-2 flex text-gray-500 border-2 border-gray-200 rounded-2xl content-around">
+        <div class="flex-2 p-2 flex  border-2 border-gray-200 rounded-lg content-around">
             <?php
             echo '
-            <a class="text-center flex-1 rounded-2xl my-2 p-2 hover:bg-gray-100" href="driver_profile.php?id=">Total Earnings</a>
-            <a class="text-center flex-1 rounded-2xl my-2 p-2 hover:bg-gray-100" href="driver_booking.php?id=">Total Trip</a>
-            <a class="text-center flex-1 rounded-2xl my-2 p-2 hover:bg-gray-100" href="">Distance Travelled</a>
-            <a class="text-center flex-1 rounded-2xl my-2 p-2 hover:bg-gray-100" href="">RM/km</a>
+            <a class="text-center flex-1 rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_profile.php?id=">Total Earnings</a>
+            <a class="text-center flex-1 rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_booking.php?id=">Total Trip</a>
+            <a class="text-center flex-1 rounded-lg my-2 p-2 hover:bg-gray-600" href="">Distance Travelled</a>
+            <a class="text-center flex-1 rounded-lg my-2 p-2 hover:bg-gray-600" href="">RM/km</a>
             ';
             ?>
         </div>
 
     </div>
-    <div class="w-auto m-8 p-1 shadow-lg rounded-2xl border-1 border-gray-200">
+    <div class="w-auto mx-10 p-1 shadow-lg rounded-lg border-2 border-gray-200">
         <div class="p-2">
-            <h1 class="text-center text-2xl text-gray-500"> Available Bookings</h1>
+            <h1 class="text-center text-2xl "> Available Bookings</h1>
 
         </div>
     </div>
   
     <!-- New div card for bookings-->
 
-    <div class=" mx-8  flex flex-col gap-2 w-auto h-auto ">
+    <div class=" mx-10 my-2  flex flex-col gap-2 w-auto h-auto ">
         <?php
         foreach ($pending_bookings as $booking) {
-            echo '<div class="border-2 rounded-lg p-2 my-2 h-auto shadow-lg ">';
+            echo '<div class="bg-gray-800 border-2 rounded-lg p-2 my-2 h-auto shadow-lg ">';
             echo '<div class="border-2 m-2 p-2 rounded-lg flex flex-col">' . '<h1>Customer ID:</h1>' . $booking['user_ID'] . "</div>";
             echo '<div class="p-2 m-2 border-2 rounded-lg ">'.'<h1>Current Location:'.$booking['user_location'].'</h1>'.'</div>';
             echo '<div class="p-2 m-2 border-2 rounded-lg ">'.'<h1>Pickup Location:'.$booking['pickup_location'].'</h1>'.'</div>';
