@@ -30,25 +30,30 @@ if (!isset($_SESSION["email"])) {
         <div>
             <h1 class=" text-center text-2xl rounded-lg">Booking</h1>
         </div>
-        <div class="flex flex-wrap flex-col">
+        <div class="flex flex-col">
 
             <!-- Below is for search sugggestions -->
+            <input class="flex-4 bg-gray-700 p-2 mx-2  rounded-lg w-auto" type="search" id="address-input"
+                placeholder="Search for an address..." list="suggestions-container">
+            <datalist id="suggestions-container" class="text-white"></datalist>
+            <!-- <div id="suggestions-container"></div> -->
+
+
+            <!-- Below button for click at current destination -->
             <button onclick="getLocation()"
-                class="m-4 w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Click
+                class="my-2 mx-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Click
                 to pickup at current destination
             </button>
-            <form class="flex flex-1 flex-wrap flex-col" method="POST">
+
+            <form class="flex flex-wrap flex-col" method="POST">
                 <label class="flex-1 p-2 mx-2 text-lg " for="pickupDestination">Pickup Location</label><br>
-                <input class="flex-4 bg-gray-700 p-2 mx-2  rounded-lg w-auto" type="search" id="address-input"
-                    placeholder="Search for an address..." list="suggestions-container">
-                <datalist id="suggestions-container" class="text-white"></datalist>
-
-
+                <input id="pickupInput" class="flex-4 bg-gray-700 p-2 mx-2  rounded-lg " type="text"
+                    id="pickupDestination" name="pickupDestination"><br>
                 <label class="flex-1 p-2 mx-2 " for="lname">Dropoff Location</label>
                 <input class="flex-4 bg-gray-700 p-2 mx-2 mb-4 rounded-lg" type="text" id="lname" name="lname">
 
                 <!-- <p class=" flex w-40 h-45" id="coords"></p> -->
-                <div id="map" class="m-2 p-1 w-auto h-96 border-2 rounded-lg text-black"></div>
+                <div id="map" class="m-2 p-1 w-auto h-96 border-2 rounded-lg"></div>
                 <div class="text-white flex justify-end ">
                     <button
                         class=" mx-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get
@@ -60,7 +65,16 @@ if (!isset($_SESSION["email"])) {
             </form>
 
         </div>
+
+
+
+
+
+
     </div>
+
+
+
     <!-- script below -->
     <script src="scripts/booking.js"></script>
 </body>
