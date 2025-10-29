@@ -1,91 +1,66 @@
-const tempat = document.getElementById("coords");
-//below for form input fill
-const borangPickup = document.getElementById("pickupInput")
+// -------------------- Elements --------------------
+const tempat = document.getElementById("coords"); // used to show geolocation message (optional)
+const input = document.getElementById('address-input');
+const datalist = document.getElementById('suggestions-container'); // can be <datalist> or <datalist>
 
+// -------------------- Geolocation --------------------
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success, error);
-    }
-    else {
-        tempat.innerHTML = "Geolocation is not supported by this browser"
+    } else {
+        tempat.innerHTML = "Geolocation is not supported by this browser";
     }
 }
 
 function success(position) {
-    let current_coords = [position.coords.longitude, position.coords.latitude];
-    new maplibregl.Marker({ color: '#4927F5' }) // Custom color
-        // Set position using the markerCoords variable
-        .setLngLat(current_coords)
-        // Add a simple popup
-        .setPopup(new maplibregl.Popup({ offset: 25 })
-            .setHTML('<h3>Current</h3>'))
-        // Add the marker to the map
-        .addTo(map);
-    borangPickup.value = "Latitude:" + position.coords.latitude + " Longitude:" + position.coords.longitude;
-    //tempat.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
+    const current_coords = [position.coords.longitude, position.coords.latitude];
 
+    new maplibregl.Marker({ color: '#4927F5' })
+        .setLngLat(current_coords)
+        .setPopup(new maplibregl.Popup({ offset: 25 }).setHTML('<h3>Current</h3>'))
+        .addTo(map);
+
+    // set input with lat/lng for form
+    input.value = "Latitude:" + position.coords.latitude + " Longitude:" + position.coords.longitude;
 }
+
 function error() {
     alert("No position available");
 }
 
-
+// -------------------- Map init --------------------
 const map = new maplibregl.Map({
     style: 'https://tiles.openfreemap.org/styles/liberty',
     center: [101.7980, 2.934],
-
-    //101.6841 ,101.6841 ,3.1319
     zoom: 16,
     container: 'map',
 });
 
-const markerCoords = [101.79947305762809, 2.935063798197489]
-
-
+const markerCoords = [101.79947305762809, 2.935063798197489];
 
 map.on('load', () => {
-
-
-
-
-    // Create the marker instance
-    new maplibregl.Marker({ color: '#FF0000' }) // Custom color
-        // Set position using the markerCoords variable
+    // initial marker
+    new maplibregl.Marker({ color: '#FF0000' })
         .setLngLat(markerCoords)
-        // Add a simple popup
-        .setPopup(new maplibregl.Popup({ offset: 25 })
-            .setHTML('<h3>A2</h3>'))
-        // Add the marker to the map
+        .setPopup(new maplibregl.Popup({ offset: 25 }).setHTML('<h3>A2</h3>'))
         .addTo(map);
 
-    // Add navigation control
-
-});
-
-map.on('load', () => {
+    // navigation control
     map.addControl(new maplibregl.NavigationControl({
         visualizePitch: true,
         visualizeRoll: true,
         showZoom: true,
         showCompass: true
     }));
-
 });
 
+// -------------------- Search suggestions (with async debounce + abort) --------------------
 
-
-
-// <-----THIS BELOW IS FOR SEARCH SUGGESTIONS------>
-// script for search suggestions
-// Below for delay search typing
-
-// ----- Debounce that works with async functions and returns a Promise -----
+// debounce that returns a Promise and works with async funcs
 function debounceAsync(func, delay = 300) {
     let timer = null;
     return (...args) => {
-        // clear previous debounce timer
         if (timer) clearTimeout(timer);
-
         return new Promise((resolve, reject) => {
             timer = setTimeout(async () => {
                 try {
@@ -99,134 +74,113 @@ function debounceAsync(func, delay = 300) {
     };
 }
 
-// ----- shared AbortController to cancel previous fetches -----
+// keep track of in-flight fetch so we can abort it
 let currentFetchController = null;
 
-// ----- returns coordinates (or null) -----
-// note: we return the coordinates (e.g. first feature) so caller can use them
+// searchAddress returns first coordinates [lng, lat] or null
 const searchAddress = async (query) => {
+    // clear previous suggestions
     datalist.innerHTML = '';
-    //minimum kena ada 3 query utk return
-    if (query.length < 3) return;
->>>>>>> parent of 6ef88da (before changing to async debounce function)
+
+    if (!query || query.length < 3) return null;
+
+    // abort previous fetch
+    if (currentFetchController) currentFetchController.abort();
+    currentFetchController = new AbortController();
+    const signal = currentFetchController.signal;
 
     const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=7`;
 
-    // and then for error handling dekat bawah
     try {
-        // set URL response code from fetch method on the url string dekat atas
-        const response = await fetch(url);
-        //error handling
-        if (!response.ok) throw new Error('Network error');
-        // wait for payload to fully load
+        const response = await fetch(url, { signal });
+        if (!response.ok) throw new Error('Network response not ok');
+
         const data = await response.json();
+        if (!data.features || data.features.length === 0) return null;
 
+        let firstCoords = null;
 
-        //below to debug cooridnates
+        data.features.forEach((feature, i) => {
+            const props = feature.properties || {};
+            const geom = feature.geometry || {};
+            const coords = geom.coordinates || [];
 
-        // const firstFeature = data.features && data.features[0];
-        // const coords = firstFeature.geometry.coordinates; // [lon, lat]
-        // const lon = coords[0];
-        // const lat = coords[1];
-
-        // console.log('lon:', lon, 'lat:', lat);
-
-
-
-        // once payload dah load, baru retrieve the features; strt add, coords
-        data.features.forEach(feature => {
-            const properties = feature.properties;
-            const geometry =feature.geometry;
-
-            // address pulak bawah ni
             const displayAddress = [
                 props.name,
                 props.street,
                 props.city,
                 props.state,
                 props.country,
-                geom.coordinates[0],
-                geom.coordinates[1]
+                coords[0],
+                coords[1]
             ].filter(Boolean).join(', ');
 
-            //list populate utk suggestions
             const option = document.createElement('option');
             option.value = displayAddress;
 
-            // Storing as data attributes of the option
-            option.dataset.lat = geometry.coordinates[0];
-            option.dataset.lon = geometry.coordinates[1];
-
-            // console.log(option.dataset.lat,option.dataset.lon);
-
+            // store coords so we can retrieve them on change/select
+            if (coords.length >= 2) {
+                option.dataset.lng = coords[0];
+                option.dataset.lat = coords[1];
+            }
 
             datalist.appendChild(option);
+
+            if (i === 0 && coords.length >= 2) firstCoords = coords; // [lng, lat]
         });
 
-    } catch (error) {
-        console.error('Error fetching data: ', error)
+        return firstCoords;
+    } catch (err) {
+        if (err.name === 'AbortError') {
+            // expected when we cancel previous requests; treat as no result
+            return null;
+        }
+        console.error('Error fetching data:', err);
+        return null;
     }
 };
 
-// bawah ni to connect the search Address function to debounce
-const debouncedSearch = debounce(searchAddress);
-
-// // for DOM manipulation below
-// input.addEventListener('input', (event) => {
-//     debouncedSearch(event.target.value);
-// });
-
-input.addEventListener('change', () => {
-    const selectedValue = input.value;
-    let selectedOption = null;
-
-    // Find the matching option in the datalist
-    // Iterate through the options collection provided by the datalist element
-    for (const option of datalist.options) {
-        if (option.value === selectedValue) {
-            selectedOption = option;
-            break;
-        }
-    }
-
-    if (selectedOption) {
-        // Retrieve stored coordinates (now safe because selectedOption exists)
-        const lat = selectedOption.dataset.lat;
-        const lon = selectedOption.dataset.lon;
-
-        console.log(lat, lon)
-
-        // Ensure data attributes actually contain numbers before parsing
-        if (!lat || !lon || isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
-            console.error("Coordinates missing or invalid for this selection.");
-            // Reset the form input to prevent submitting bad data
-            pickupInput.value = selectedValue;
-            return; // Stop execution here
-        }
-
-        // 3. Update the form field with the structured data
-        pickupInput.value = selectedValue + ` (Lat: ${lat}, Lon: ${lon})`;
-
-        // 4. Map update logic (Now safe because we validated lat/lon)
-        const newCoords = [parseFloat(lon), parseFloat(lat)];
-
-        // You should probably remove previous markers before adding a new one for selected location
-        // Example: If you track markers, remove the old one here.
-
-        new maplibregl.Marker({ color: '#00FF00' })
-            .setLngLat(newCoords)
-            .setPopup(new maplibregl.Popup({ offset: 25 }).setHTML('<h3>Selected Location</h3>'))
-            .addTo(map);
-
-        map.setCenter(newCoords);
-        console.log('Selected Coords:', lat, lon);
-
+// -------------------- Marker management --------------------
+let pickupMarker = null;
+function handleCoords(coords) {
+    if (!coords || coords.length < 2) return;
+    // coords is [lng, lat]
+    if (pickupMarker) {
+        pickupMarker.setLngLat(coords);
     } else {
-        // 5. Handles cases where the user types custom text (the source of your NaN error)
-        console.log("Custom text entered or no valid selection made. Setting form field to plain text.");
-        // We set the form input to the plain text the user typed
-        pickupInput.value = selectedValue;
+        pickupMarker = new maplibregl.Marker({ color: '#260399' })
+            .setLngLat(coords)
+            .setPopup(new maplibregl.Popup({ offset: 25 }).setHTML('<h3>Pickup</h3>'))
+            .addTo(map);
+    }
+    map.flyTo({ center: coords, zoom: 16 });
 
-        // And importantly: we DON'T try to update the map, which prevents the NaN error.
+    // set the input string for the form
+    input.value = `Latitude:${coords[1]} Longitude:${coords[0]}`;
+}
+
+// -------------------- Wire debounce + input --------------------
+const debouncedSearch = debounceAsync(searchAddress);
+
+input.addEventListener('input', (e) => {
+    debouncedSearch(e.target.value)
+        .then(coords => {
+            if (coords) handleCoords(coords);
+        })
+        .catch(err => {
+            // real errors (not abort) will be logged here
+            console.error('Search error:', err);
+        });
+});
+
+// When user picks an option from the datalist (or types exact value), get the saved coords
+input.addEventListener('change', (e) => {
+    const val = e.target.value;
+    // find option that matches the input value
+    const options = Array.from(datalist.options || []);
+    const found = options.find(opt => opt.value === val);
+
+    if (found && found.dataset.lng && found.dataset.lat) {
+        handleCoords([parseFloat(found.dataset.lng), parseFloat(found.dataset.lat)]);
     }
 });
