@@ -15,9 +15,8 @@
             $_SESSION['email'] = $email;
             header("Location: index.php"); // redirect to index.php
             exit();
-        } else {
-            echo "Error LOL";
         }
+        
 
         
     }
