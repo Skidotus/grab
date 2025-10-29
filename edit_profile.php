@@ -14,8 +14,11 @@ if ($_POST) {
     $username = $_POST['Name'];
     $email = $_POST['Email'];
     $password = $_POST['Password'];
+    $address = $_POST['Address'];
+    $phonenumber = $_POST['Phone'];
+    $birthdate = $_POST['Birthdate'];
 
-    if (updateByID($id, $username, $email, $password)) {
+    if (updateByID($id, $username, $email, $password, $address, $birthdate, $phonenumber)) {
         $message = "✅ Profile updated successfully!";
         $_SESSION['email'] = $email;
     } else {
@@ -48,12 +51,27 @@ $user = selectUserByEmail($_SESSION['email']);
 
             <label for="User_Name">Name:</label><br>
             <input type="text" name="Name" value="<?php echo htmlspecialchars($user['User_Name']); ?>" required>
+            <br>
 
             <label for="User_Email"><br>Email:</label><br>
             <input type="email" name="Email" value="<?php echo htmlspecialchars($user['User_Email']); ?>" required>
+            <br>
 
             <label for="User_Pass"><br>Password:</label><br>
-            <input type="password" name="Password" placeholder="Enter new password">
+            <input type="password" name="Password" placeholder="Enter new password"><br>
+            <br>
+
+            <label for="User_Address">Address:</label><br>
+            <input type="address" name="Address" value="<?php echo htmlspecialchars($user['User_Address']); ?>"><br>
+            <br>
+
+            <label for="User_Phone">Phone Number:</label><br>
+            <input type="phonenumber" name="Phone" value="<?php echo htmlspecialchars($user['User_Phone']); ?>"><br>
+            <br>
+
+            <label for="User_Birthdate">Birth Date:</label><br>
+            <input type="birthdate" name="Birthdate" value="<?php echo htmlspecialchars($user['User_Birthdate']); ?>">
+
 
             <div class="btn-box">
                 <button type="submit" class="btn">Save</button>
