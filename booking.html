@@ -123,15 +123,21 @@
             text-align: center;
         }
 
+        #submit-container {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
         #submit-button {
             background-color: #f9d342;
             color: #000;
             border: none;
             padding: 12px 20px;
-            margin-top: 20px;
             border-radius: 6px;
             cursor: pointer;
-            width: 100%;
             font-size: 16px;
         }
 
@@ -140,8 +146,7 @@
         }
 
         label[for="terms"] {
-            display: block;
-            margin-top: 20px;
+            font-weight: normal;
             color: #bbb;
         }
 
@@ -184,6 +189,10 @@
                 <option value="female-cafe">Female Cafe</option>
             </select>
 
+            <!-- NEW: Distance Input -->
+            <label for="distance">Distance (km):</label>
+            <input type="number" id="distance" name="distance" step="0.1" placeholder="Enter distance (for testing)" required>
+
             <label for="pax">Number of Pax:</label>
             <input type="number" id="pax" name="pax" min="1" max="10" required>
 
@@ -197,8 +206,7 @@
             <input type="datetime-local" id="pickup-time" name="pickup-time" required>
 
             <label for="contact">Contact Number:</label>
-            <input type="tel" id="contact" name="contact" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                placeholder="123-456-7890" required>
+            <input type="tel" id="contact" name="contact" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required>
 
             <label for="email">Email Address:</label>
             <input type="email" id="email" name="email" placeholder="example@example.com" required>
@@ -259,10 +267,11 @@
             <p><strong>Place ID/OSM ID:</strong> <span id="osmr-id"></span></p>
         </div>
 
-        <div align="center">
-            <button type="submit" id="submit-button">Submit Booking</button><br><br>
+        <div id="submit-container">
+            <button type="submit" id="submit-button">Submit Booking</button>
             <label for="terms">
-        <input type="checkbox" name="terms" required>I agree to the terms and conditions</br>
+                <input type="checkbox" id="terms" name="terms" required>
+                I agree to the terms and conditions
             </label>
         </div>
     </form>
