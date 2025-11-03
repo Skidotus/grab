@@ -5,6 +5,9 @@ session_start();
 if (!isset($_SESSION["email"])) {
     header("Location: login.php");
 }
+else{
+    $email = $_SESSION["email"];
+}
 ?>
 
 <!DOCTYPE html>
@@ -15,10 +18,8 @@ if (!isset($_SESSION["email"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking New</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking</title>
     <link href="styles/output.css" rel="stylesheet">
+     
 
     <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
     <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
@@ -52,9 +53,9 @@ if (!isset($_SESSION["email"])) {
 
 
 
-        <form id="pickupForm" class="space-y-3 ">
+        <form id="pickupForm" class="space-y-3 " action="process_booking.php" method="POST">
             <!-- Name -->
-            <input type="text" id="name" placeholder="Your name"
+            <input type="text" id="name" placeholder="Your name" value="<?php echo $email?>"
                 class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required />
 
@@ -63,7 +64,7 @@ if (!isset($_SESSION["email"])) {
             <div class="w-full border bg-green-700 border-gray-300 rounded-lg px-3 py-2 space-y-3">
                 <p class="text-white px-3 py-2">Pickup</p>
                 <!-- Pickup Location Input -->
-                <input type="text" id="pickupLocation" placeholder="Pickup Location"
+                <input type="text" id="pickupLocation" placeholder="Pickup Location" name="pickupLocation"
                     class="w-full border bg-white  border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required />
 
@@ -91,7 +92,7 @@ if (!isset($_SESSION["email"])) {
 
 
                 <!-- Coordinates -->
-                <input type="text" id="pickupCoords" placeholder="Coordinates"
+                <input type="text" id="pickupCoords" placeholder="Coordinates" name="pickupCoords"
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-700" readonly />
             </div>
 
@@ -99,9 +100,11 @@ if (!isset($_SESSION["email"])) {
             <!-- Dropoff Location -->
 
             <!-- Dropoff Location -->
-            <div class="w-full border bg-blue-700 border-gray-300 rounded-lg px-3 py-2 space-y-3">
+            <div class="w-full border bg-red-700 border-gray-300 rounded-lg px-3 py-2 space-y-3">
                 <p class="text-white px-3 py-2">Dropoff</p>
-                <input type="text" id="dropoffLocation" class="w-full border bg-white  border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Dropoff Location" ... />
+                <input type="text" id="dropoffLocation" name="dropoffLocation"
+                    class="w-full border bg-white  border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Dropoff Location" ... />
 
                 <button type="button" id="togglePresetsDropoff"
                     class="w-full bg-gray-800 hover:bg-gray-900 text-white font-medium py-2 rounded-lg transition">
@@ -112,7 +115,17 @@ if (!isset($_SESSION["email"])) {
                     <div id="presetListDropoff"></div>
                 </div>
 
-                <input type="text" id="dropoffCoords" class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-700" placeholder="Coordinates" readonly ... />
+                <input type="text" id="dropoffCoords" name="dropoffCoords"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-700"
+                    placeholder="Coordinates" readonly ... />
+            </div>
+
+            <div class="text-white w-full border bg-blue-700 border-gray-300 rounded-lg px-3 py-2 space-y-3">
+                <h2>Confirm Trip </h2>
+                <button type="button" id="btnConfirm"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition">CONFIRM</button>
+                <pre id="output"></pre>
+
             </div>
             <!-- Submit Button -->
 
@@ -138,6 +151,23 @@ if (!isset($_SESSION["email"])) {
             const presetContainerPickup = document.getElementById('presetContainer'); // pickup container
             const presetContainerDropoff = document.getElementById('presetContainerDropoff'); // dropoff container
             const form = document.getElementById('pickupForm');
+            const btnConfirm = document.getElementById('btnConfirm');
+
+            
+            // Preset locations array (same set used for both pickup & dropoff)
+            const locations = [
+                { name: 'A1', lat: 2.9353182737674843, lng: 101.79829494749568 },
+                { name: 'A2', lat: 2.9349646866440273, lng: 101.799301136001 },
+                { name: 'A3', lat: 2.9347611061282444, lng: 101.79955603708898 },
+                { name: 'A4', lat: 2.9337057012809873, lng: 101.79988418658749 },
+                { name: 'A5', lat: 2.933619983077054, lng: 101.7998010083377 },
+                { name: 'KT1', lat: 2.9330815654583393, lng: 101.79793589545373 },
+                { name: 'KT2', lat: 2.932952988078193, lng: 101.79848594516999 },
+                { name: 'KT3', lat: 2.9326610102225916, lng: 101.79960482678788 },
+                { name: 'KT4', lat: 2.932856555033398, lng: 101.7995645792477 },
+                { name: 'KT5', lat: 2.9310377191034647, lng: 101.7979411283062 },
+                { name: 'Faisal Hassan Halle', lat: 2.933119067191419, lng: 101.79752000420486 }
+            ];
 
             // Initialize map
             const map = new maplibregl.Map({
@@ -149,6 +179,12 @@ if (!isset($_SESSION["email"])) {
 
             let pickupMarker = null;
             let dropoffMarker = null;
+
+
+            // for coords storage
+            let chosedPickupCoords = null;
+            let chosedDropoffCoords = null;
+
 
             // Geolocation logic (for pickup "Get My Location" button)
             window.getLocation = function () {
@@ -164,12 +200,12 @@ if (!isset($_SESSION["email"])) {
                 const lat = position.coords.latitude;
                 if (tempatAmik) tempatAmik.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 
-                map.flyTo({ center: [lng, lat], zoom: 15, padding: { bottom: 250 } });
+                map.flyTo({ center: [lng, lat], zoom: 15, padding: { bottom: 0 } });
 
                 if (pickupMarker) {
                     pickupMarker.setLngLat([lng, lat]);
                 } else {
-                    pickupMarker = new maplibregl.Marker({ color: 'red' }).setLngLat([lng, lat]).addTo(map);
+                    pickupMarker = new maplibregl.Marker({ color: 'green' }).setLngLat([lng, lat]).addTo(map);
                 }
             }
 
@@ -179,41 +215,37 @@ if (!isset($_SESSION["email"])) {
 
             // Set pickup (fills pickup input + coords + move marker)
             window.setPickup = function (name, lat, lng) {
+                
                 if (pickupInput) pickupInput.value = name;
-                if (tempatAmik) tempatAmik.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+                if (tempatAmik) {
+                    tempatAmik.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+                    chosedPickupCoords = [lng,lat];
+                    console.log(chosedPickupCoords);
+                }
 
                 map.flyTo({ center: [lng, lat], zoom: 18, padding: { bottom: 300 } });
 
                 if (pickupMarker) pickupMarker.setLngLat([lng, lat]);
-                else pickupMarker = new maplibregl.Marker({ color: 'red' }).setLngLat([lng, lat]).addTo(map);
+                else pickupMarker = new maplibregl.Marker({ color: 'green' }).setLngLat([lng, lat]).addTo(map);
             };
 
             // Set dropoff (fills dropoff input + coords + set separate dropoff marker)
-            window.setDropoff = function (name, lat, lng) {
-                if (dropoffInput) dropoffInput.value = name;
-                if (tempatTurun) tempatTurun.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+            window.setDropoff = function (dropOffname, dropOfflat, dropOfflng) {
+                if (dropoffInput) dropoffInput.value = dropOffname;
+                if (tempatTurun) {
+                    tempatTurun.value = `${dropOfflat.toFixed(5)}, ${dropOfflng.toFixed(5)}`;
+                    chosedDropoffCoords = [dropOfflng,dropOfflat];
+                    console.log(chosedDropoffCoords);
+                }
 
                 // optionally move map a bit so marker is visible above bottom overlay
-                map.flyTo({ center: [lng, lat], zoom: 18, padding: { bottom: 300 } });
+                map.flyTo({ center: [dropOfflng, dropOfflat], zoom: 18, padding: { bottom: 300 } });
 
-                if (dropoffMarker) dropoffMarker.setLngLat([lng, lat]);
-                else dropoffMarker = new maplibregl.Marker({ color: 'green' }).setLngLat([lng, lat]).addTo(map);
+                if (dropoffMarker) dropoffMarker.setLngLat([dropOfflng, dropOfflat]);
+                else dropoffMarker = new maplibregl.Marker({ color: 'red' }).setLngLat([dropOfflng, dropOfflat]).addTo(map);
             };
 
-            // Preset locations array (same set used for both pickup & dropoff)
-            const locations = [
-                { name: 'A1', lat: 2.9353182737674843, lng: 101.79829494749568 },
-                { name: 'A2', lat: 2.9349646866440273, lng: 101.799301136001 },
-                { name: 'A3', lat: 2.9347611061282444, lng: 101.79955603708898 },
-                { name: 'A4', lat: 2.9337057012809873, lng: 101.79988418658749 },
-                { name: 'A5', lat: 2.933619983077054, lng: 101.7998010083377 },
-                { name: 'KT1', lat: 2.9330815654583393, lng: 101.79793589545373 },
-                { name: 'KT2', lat: 2.932952988078193, lng: 101.79848594516999 },
-                { name: 'KT3', lat: 2.9326610102225916, lng: 101.79960482678788 },
-                { name: 'KT4', lat: 2.932856555033398, lng: 101.7995645792477 },
-                { name: 'KT5', lat: 2.9310377191034647, lng: 101.7979411283062 },
-                { name: 'Faisal Hassan Halle', lat: 2.933119067191419, lng: 101.79752000420486 }
-            ];
+            
 
             // Helper to create a button node
             function makePresetButton(loc, onClickHandler) {
@@ -261,27 +293,25 @@ if (!isset($_SESSION["email"])) {
                 });
             }
 
-            // Prevent default form submit if you handle it via JS
-            if (form) {
-                form.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    // collect values and send via fetch/AJAX
-                    const payload = {
-                        name: document.getElementById('name')?.value || '',
-                        pickup: document.getElementById('pickupLocation')?.value || '',
-                        pickupCoords: document.getElementById('pickupCoords')?.value || '',
-                        dropoff: document.getElementById('dropoffLocation')?.value || '',
-                        dropoffCoords: document.getElementById('dropoffCoords')?.value || ''
-                    };
-                    console.log('Form payload', payload);
-                    // TODO: send payload using fetch to your server endpoint
-                });
-            }
+            // Below once if user confirm route
+            btnConfirm.addEventListener('click', () => {
+                console.log("button confirm clicked");
+                togglePickup.disabled = true;
+                toggleDropoff.disabled = true;
+                console.log(chosedPickupCoords,chosedDropoffCoords);
+
+
+                if (pickupMarker) { pickupMarker.remove(); pickupMarker = null; }
+                if (dropoffMarker) { dropoffMarker.remove(); dropoffMarker = null; }
+
+
+                loadRoute(map,chosedPickupCoords,chosedDropoffCoords);
+
+            });
         });
     </script>
 
-
-    </script>
+    <script src="scripts/OSRM_routing.js"></script>
 
 </body>
 
