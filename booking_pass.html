@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Processing</title>
+</head>
+<body>
+    <h1>Booking Confirmation</h1>
+    <p>Your booking has been successfully processed.</p>
+    <div id="confirmation-details">
+        <h3>Your Booking Details:</h3>
+        <p><strong>Pickup Destination:</strong> <span id="pickup-destination"></span></p>
+        <p><strong>Number of Pax:</strong> <span id="pax"></span></p>
+        <p><strong>Number of Luggage:</strong> <span id="luggage"></span></p>
+        <p><strong>Remarks:</strong> <span id="remarks"></span></p>
+        <p><strong>Pickup Time:</strong> <span id="pickup-time"></span></p>
+        <p><strong>Contact Number:</strong> <span id="contact"></span></p>
+        <p><strong>Email Address:</strong> <span id="email"></span></p>
+        <p><strong>Payment Method:</strong> <span id="payment"></span></p>
+        <p><strong>Service Type:</strong> <span id="service"></span></p>
+    </div>
+
+    <script>
+        // Function to get query parameters from the URL
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                "pickup-destination": params.get("pickup-destination"),
+                pax: params.get("pax"),
+                luggage: params.get("luggage"),
+                remarks: params.get("remarks"),
+                "pickup-time": params.get("pickup-time"),
+                contact: params.get("contact"),
+                email: params.get("email"),
+                payment: params.get("payment"),
+                service: params.get("service")
+            };
+        }
+
+        // Populate the confirmation details
+        const bookingDetails = getQueryParams();
+        document.getElementById("pickup-destination").textContent = bookingDetails["pickup-destination"];
+        document.getElementById("pax").textContent = bookingDetails.pax;
+        document.getElementById("luggage").textContent = bookingDetails.luggage;
+        document.getElementById("remarks").textContent = bookingDetails.remarks;
+        document.getElementById("pickup-time").textContent = bookingDetails["pickup-time"];
+        document.getElementById("contact").textContent = bookingDetails.contact;
+        document.getElementById("email").textContent = bookingDetails.email;
+        document.getElementById("payment").textContent = bookingDetails.payment;
+        document.getElementById("service").textContent = bookingDetails.service;
+    </script>
+</body>
+</html>
