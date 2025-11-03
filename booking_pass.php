@@ -28,7 +28,7 @@ $pickup_time = $_POST['pickup-time'] ?? '';
 $contact = $_POST['contact'] ?? '';
 $payment = $_POST['payment'] ?? '';
 $service = $_POST['service'] ?? '';
-$distance = $_POST['distance'] ?? ''; // 🟢 Added
+$distance = $_POST['distance'] ?? '';
 
 if (empty($pickup_destination) || empty($pax) || empty($pickup_time) || empty($contact) || empty($service) || empty($distance)) {
     echo "Please fill all required fields.";
