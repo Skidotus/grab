@@ -9,9 +9,9 @@
     $connection = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
 
-    function register($username, $email, $password, $phonenumber, $address, $birthdate) {
+    function register($username, $email, $password, $phonenumber, $address, $birthdate, $filename) {
         global $connection;
-        $sql = "INSERT INTO user_creds (User_Name, User_Email, User_Pass, User_Phone, User_Address, User_Birthdate) VALUES ('$username', '$email', '$password', '$phonenumber', '$address', '$birthdate')";
+        $sql = "INSERT INTO user_creds (User_Name, User_Email, User_Pass, User_Phone, User_Address, User_Birthdate, User_Picture) VALUES ('$username', '$email', '$password', '$phonenumber', '$address', '$birthdate', '$filename')";
         return $connection->query($sql);
     }
 
@@ -81,6 +81,24 @@
         $result = $connection->query($sql);
         return $result->fetch_assoc();
     }
+    
+
+    function uploadImage($picture) {
+        $filename = $picture['name']; //extract nama file so calling senang
+        $tempname = $picture['tmp_name']; //php simpan temporary dalam temp folder xampp
+        $targetFolder = "./image/" . $filename; //destination gambar letak mana
+
+        if (move_uploaded_file($tempname, $targetFolder)) {
+            return $filename; 
+        } else {
+            return null; //
+        }
+    }
 
     
-?>
+
+
+    ?>
+
+
+     

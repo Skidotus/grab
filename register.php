@@ -8,11 +8,18 @@
         $phonenumber = $_POST['phonenumber'];
         $address = $_POST['address'];
         $birthdate = $_POST['birthdate'];
-        if(register($username, $email, $password, $phonenumber, $address, $birthdate)) {
+
+        $picture = $_FILES['uploadimage'];
+        $filename = uploadImage($picture);
+        
+
+        if(register($username, $email, $password, $phonenumber, $address, $birthdate,$filename)) {
             header("Location: login.php");
             exit();
         }
     }
+
+    
 
 
 ?>
@@ -32,7 +39,7 @@
 <body bgcolor="Black">
     <div class="login">
         <h1>Registration</h1>
-        <form class="registration-form" method="POST">
+        <form class="registration-form" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="username" required>
@@ -56,6 +63,10 @@
             <div class="form-group">
                 <label for="address">Address (optional):</label>
                 <input type="text" id="address" name="address">
+            </div>
+            <div class="form-group">
+                <label for="picture">Picture (optional)</label>
+                <input type="file" name="uploadimage">
             </div>
             <button type="submit" class="btn">Register</button>
         </form>
