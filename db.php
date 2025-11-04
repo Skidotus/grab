@@ -1,13 +1,14 @@
 <?php
-    $servername = '127.0.0.1';
-    $dbname = 'student_transport';
-    // $dbusername = 'pma';
-    // $dbpassword = 'SuperStrongPass123!';
-    $dbusername = 'root';
-    $dbpassword = '';
+$servername = '127.0.0.1';
+$dbname = 'student_transport';
+$dbusername = 'root';
+$dbpassword = '';
 
-    $connection = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
     function register($username, $email, $password, $phonenumber, $address, $birthdate, $filename) {
         global $connection;
@@ -21,12 +22,13 @@
         return $connection->query($sql);
     }
 
-    function login($email, $password) {
-        global $connection;
-        $sql = "SELECT * FROM user_creds WHERE User_Email = '$email' AND User_Pass = '$password'";
-        $result = $connection->query($sql);
-        return $result->fetch_assoc();
-    }
+function login($email, $password) {
+    global $conn;
+    $sql = "SELECT * FROM user_creds 
+            WHERE User_Email = '$email' AND User_Pass = '$password'";
+    $result = $conn->query($sql);
+    return $result->fetch_assoc();
+}
 
     function logindriver($dremail, $drpassword) {
         global $connection;
@@ -42,18 +44,18 @@
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    function deleteUserByID($id){
-        global $connection;
-        $sql = "DELETE FROM user_creds where User_ID = '$id'";
-        $connection->query($sql);
-    }
+function deleteUserByID($id){
+    global $conn;
+    $sql = "DELETE FROM user_creds WHERE User_ID = '$id'";
+    $conn->query($sql);
+}
 
-    function selectUserByID($id){
-        global $connection;
-        $sql = "SELECT * FROM user_creds where User_ID ='$id'";
-        $result = $connection->query($sql);
-        return $result->fetch_assoc();
-    }
+function selectUserByID($id){
+    global $conn;
+    $sql = "SELECT * FROM user_creds WHERE User_ID ='$id'";
+    $result = $conn->query($sql);
+    return $result->fetch_assoc();
+}
 
     function updateByID($id, $username, $email, $password, $address, $birthdate, $phonenumber){
         global $connection;
