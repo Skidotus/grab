@@ -2,31 +2,31 @@
 require "db.php";
 session_start();
 
-if (!isset($_SESSION['email'])) {
-    header("Location: login.php");
+if (!isset($_SESSION['dremail'])) {
+    header("Location: driver_login.php");
     exit;
 }
 
 $message = "";
 
 if ($_POST) {
-    $id = $_POST['ID'];
-    $username = $_POST['Name'];
-    $email = $_POST['Email'];
-    $password = $_POST['Password'];
-    $address = $_POST['Address'];
-    $phonenumber = $_POST['Phone'];
-    $birthdate = $_POST['Birthdate'];
+    $drid = $_POST['drID'];
+    $drusername = $_POST['drName'];
+    $dremail = $_POST['drEmail'];
+    $drpassword = $_POST['drPassword'];
+    $draddress = $_POST['drAddress'];
+    $drphonenumber = $_POST['drPhone'];
+    $drbirthdate = $_POST['drBirthdate'];
 
-    if (updateByID($id, $username, $email, $password, $address, $birthdate, $phonenumber)) {
+    if (DriverupdateByID($drid, $drusername, $dremail, $drpassword, $draddress, $drbirthdate, $drphonenumber)) {
         $message = "✅ Profile updated successfully!";
-        $_SESSION['email'] = $email;
+        $_SESSION['dremail'] = $dremail;
     } else {
         $message = "❌ Failed to update profile.";
     }
 }
 
-$user = selectUserByEmail($_SESSION['email']);
+$user = selectDriverByEmail($_SESSION['dremail']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,35 +47,35 @@ $user = selectUserByEmail($_SESSION['email']);
         <?php endif; ?>
 
         <form class="update-profile" method="POST">
-            <input type="hidden" name="ID" value="<?php echo $user['User_ID']; ?>">
+            <input type="hidden" name="drID" value="<?php echo $user['Driver_ID']; ?>">
 
             <label for="User_Name">Name:</label><br>
-            <input type="text" name="Name" value="<?php echo htmlspecialchars($user['User_Name']); ?>" required>
+            <input type="text" name="drName" value="<?php echo htmlspecialchars($user['Driver_Name']); ?>" required>
             <br>
 
             <label for="User_Email"><br>Email:</label><br>
-            <input type="email" name="Email" value="<?php echo htmlspecialchars($user['User_Email']); ?>" required>
+            <input type="email" name="drEmail" value="<?php echo htmlspecialchars($user['Driver_Email']); ?>" required>
             <br>
 
             <label for="User_Pass"><br>Password:</label><br>
-            <input type="password" name="Password" placeholder="Enter new password"><br>
+            <input type="password" name="drPassword" placeholder="Enter new password"><br>
             <br>
 
             <label for="User_Address">Address:</label><br>
-            <input type="address" name="Address" value="<?php echo htmlspecialchars($user['User_Address']); ?>"><br>
+            <input type="address" name="drAddress" value="<?php echo htmlspecialchars($user['Driver_Address']); ?>"><br>
             <br>
 
             <label for="User_Phone">Phone Number:</label><br>
-            <input type="phonenumber" name="Phone" value="<?php echo htmlspecialchars($user['User_Phone']); ?>"><br>
+            <input type="phonenumber" name="drPhone" value="<?php echo htmlspecialchars($user['Driver_Phone']); ?>"><br>
             <br>
 
             <label for="User_Birthdate">Birth Date:</label><br>
-            <input type="birthdate" name="Birthdate" value="<?php echo htmlspecialchars($user['User_Birthdate']); ?>">
+            <input type="birthdate" name="drBirthdate" value="<?php echo htmlspecialchars($user['Driver_Birthdate']); ?>">
 
 
             <div class="btn-box">
                 <button type="submit" class="btn">Save</button>
-                <a href="profile.php" class="btn logout">Back</a>
+                <a href="driver_profile.php" class="btn logout">Back</a>
 
             </div>
         </form>

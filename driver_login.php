@@ -3,11 +3,11 @@ require "db.php";
 session_start();
 
 if($_POST) {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        if(login($email,$password)) {
+        $dremail = $_POST['dremail'];
+        $drpassword = $_POST['drpassword'];
+        if(logindriver($dremail,$drpassword)) {
             // $_SESSION['password'] = $password;
-            $_SESSION['email'] = $email;
+            $_SESSION['dremail'] = $dremail;
             header("Location: driver_dashboard.php"); // redirect to index.php
             exit();
         } else {
@@ -34,16 +34,16 @@ if($_POST) {
             
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="dremail" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="drpassword" required>
             </div>
             <button type="submit" class="btn">Login</button>
         </form>
         <p>Not yet a member? <a href="register.php">Sign up here</a></p>
-        <p>Are you a driver? <a href="driver_login.php">login here</a></p>
+        <p>Are you a regular customer? <a href="login.php">login here</a></p>
     </div>
 </body>
 </html>

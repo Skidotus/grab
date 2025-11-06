@@ -22,7 +22,7 @@ p {
     background-color: #333;
     padding: 40px;
     border-radius: 20px;
-    width: 500px;
+    width: 700px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     color: white;
@@ -42,7 +42,7 @@ label {
     font-weight: bold;
     font-family: 'Montserrat', sans-serif; /* Apply to labels for consistency */
 }
-
+.form-group input[type="date"]
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"] {
@@ -55,6 +55,7 @@ label {
     color: white;
     font-family: 'Montserrat', sans-serif; /* Apply to input fields */
 }
+
 
 .btn {
     background-color: #4CAF50;
@@ -97,3 +98,4 @@ a {
 a:hover {
     text-decoration: underline;
 }
+

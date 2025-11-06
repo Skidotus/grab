@@ -20,9 +20,12 @@ $user = selectUserByEmail($_SESSION['email']);
 <body>
     <div class="profile-box">
         <h2>My Profile</h2>
+        <img src="./image/<?php echo htmlspecialchars($user['User_Picture']); ?>" width="150" height="150" style="margin:10px; border-radius:10px;">
         <p><strong>Name:</strong> <?php echo $user['User_Name']; ?></p>
         <p><strong>Email:</strong> <?php echo $user['User_Email']; ?></p>
-        <p><strong>User ID:</strong> <?php echo $user['User_ID']; ?></p>
+        <p><strong>Address:</strong> <?php echo $user['User_Address']; ?></p>
+        <p><strong>Phone Number:</strong> <?php echo $user['User_Phone']; ?></p>
+        <p><strong>Birthdate:</strong> <?php echo $user['User_Birthdate']; ?></p>
 
         <div class="btn-box">
             <a href="edit_profile.php" class="btn">Edit</a>
