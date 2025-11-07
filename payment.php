@@ -2,166 +2,120 @@
 require "db.php";
 session_start();
 
-// --- Check if user is logged in ---
 if (!isset($_SESSION['email'])) {
     header("Location: login.php");
     exit();
 }
 
-// --- Get user info ---
 $email = $_SESSION['email'];
-$getUser = "SELECT User_ID, User_Name FROM user_creds WHERE User_Email = '$email'";
-$userResult = $conn->query($getUser);
+$user  = UserEmail($email);
 
-if ($userResult->num_rows == 0) {
-    echo "User not found!";
+if (!$user) {
+    echo "You don't exist! Please register or relogin.";
     exit();
 }
 
-$user = $userResult->fetch_assoc();
-$User_ID = $user['User_ID'];
+$user_id  = $user['User_ID'];
 
-// --- When user submits payment form ---
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $trip_id = $_POST['trip_id'];
-    $amount = $_POST['amount'];
-    $method = $_POST['method'];
+//latest unpaid trip
+$tripData = LatestUnpaidTrip($user_id);
 
-    // --- Check if all form data is filled ---
-    if (empty($trip_id) || empty($amount) || empty($method)) {
-        echo "Please fill in all fields.";
-        exit();
-    }
-
-    // --- Make sure this trip belongs to the current user ---
-    $checkTrip = "SELECT t.trip_id 
-                  FROM Trip t 
-                  JOIN Booking b ON b.booking_number = t.booking_number 
-                  WHERE t.trip_id = '$trip_id' AND b.User_ID = '$User_ID'";
-    $checkResult = $conn->query($checkTrip);
-
-    if ($checkResult->num_rows == 0) {
-        echo "Trip not found or not yours!";
-        exit();
-    }
-
-    // --- Check if payment already made ---
-    $checkPayment = "SELECT * FROM Payment WHERE trip_id = '$trip_id'";
-    $paymentResult = $conn->query($checkPayment);
-
-    if ($paymentResult->num_rows > 0) {
-        echo "You already made a payment for this trip.";
-        exit();
-    }
-
-    // --- Decide payment status (pending or paid) ---
-    $pendingMethods = ['cash', 'qr', 'ewallet'];
-    if (in_array($method, $pendingMethods)) {
-        $status = 'Pending'; // driver needs to confirm
-    } else {
-        $status = 'Paid'; // credit/debit are instant
-    }
-
-    // --- Insert payment record ---
-    $insertPayment = "INSERT INTO Payment (trip_id, User_ID, amount, method, status, paid_at)
-                      VALUES ('$trip_id', '$User_ID', '$amount', '$method', '$status', NOW())";
-
-    if ($conn->query($insertPayment) === TRUE) {
-        ?>
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Payment <?php echo $status; ?></title>
-            <style>
-                body { background-color: black; color: white; text-align: center; font-family: Arial; margin-top: 100px; }
-                .box { background-color: #1c1c1c; padding: 30px; border-radius: 10px; display: inline-block; }
-                h2 { color: <?php echo $status == 'Paid' ? '#00ff88' : '#f9d342'; ?>; }
-                a { background-color: #f9d342; color: black; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 20px; }
-                a:hover { background-color: #ffe97a; }
-            </style>
-        </head>
-        <body>
-        <div class="box">
-            <?php if ($status == 'Paid') { ?>
-                <h2>Payment Successful!</h2>
-                <p>Your online payment was processed successfully.</p>
-            <?php } else { ?>
-                <h2>⌛ Payment Pending</h2>
-                <p>Please pay the driver using <?php echo ucfirst($method); ?> and wait for confirmation.</p>
-            <?php } ?>
-            <p>Trip ID: <?php echo $trip_id; ?></p>
-            <p>Amount: RM <?php echo number_format($amount, 2); ?></p>
-            <p>Payment Method: <?php echo ucfirst($method); ?></p>
-            <p>Status: <strong><?php echo $status; ?></strong></p>
-            <a href="index.php">Back to Dashboard</a>
+if (!$tripData) {
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='utf-8' />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <script src='https://cdn.tailwindcss.com'></script>
+        <title>Payment</title>
+    </head>
+    <body class='min-h-screen bg-gradient-to-b from-neutral-900 via-black to-neutral-900 text-neutral-100 flex items-center justify-center p-6'>
+        <div class='w-full max-w-md'>
+            <div class='rounded-2xl border border-neutral-800 bg-neutral-900/60 shadow-2xl p-8 text-center'>
+                <h2 class='text-xl font-semibold mb-2'>No Unpaid Trips</h2>
+                <p class='text-neutral-300 mb-6'>You don't have any unpaid trips right now.</p>
+                <a href='booking.html' class='inline-flex w-full items-center justify-center rounded-2xl bg-yellow-300 text-black px-4 py-2 font-medium hover:opacity-90 transition'>
+                    Book Now
+                </a>
+            </div>
         </div>
-        </body>
-        </html>
-        <?php
-        exit();
-    } else {
-        echo "Error saving payment: " . $conn->error;
-        exit();
-    }
-}
-
-// --- Show unpaid or latest trip ---
-$sqlTrip = "SELECT t.trip_id, t.fare_amount, t.distance_km, t.booking_number
-            FROM Trip t
-            JOIN Booking b ON b.booking_number = t.booking_number
-            LEFT JOIN Payment p ON p.trip_id = t.trip_id
-            WHERE b.User_ID = '$User_ID' AND (p.trip_id IS NULL OR p.status != 'Paid')
-            ORDER BY t.created_at DESC LIMIT 1";
-
-$resultTrip = $conn->query($sqlTrip);
-
-if ($resultTrip->num_rows == 0) {
-    echo "<p style='color:white;text-align:center;margin-top:100px;'>No unpaid trips found. Please make a booking first.</p>";
-    echo "<p style='text-align:center;'><a href='booking.html' style='background:#f9d342;color:#000;padding:10px 16px;border-radius:6px;text-decoration:none;'>Book Transport</a></p>";
+    </body>
+    </html>";
     exit();
 }
 
-$trip = $resultTrip->fetch_assoc();
+$tripId        = htmlspecialchars($tripData['trip_id']);
+$bookingNumber = htmlspecialchars($tripData['booking_number']);
+$distanceKm    = htmlspecialchars($tripData['distance_km']);
+$fareAmount    = number_format((float)$tripData['fare_amount'], 2);
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Make a Payment</title>
-    <style>
-        body { background-color: #000; color: #fff; font-family: Arial; text-align: center; margin-top: 80px; }
-        .box { background-color: #1c1c1c; padding: 30px; border-radius: 10px; width: 360px; margin: auto; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; border: none; border-radius: 6px; }
-        button { background: #f9d342; color: #000; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
-        button:hover { background: #ffe97a; }
-    </style>
+    <meta charset="utf-8" />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Payment</title>
 </head>
-<body>
+<body class="min-h-screen bg-gradient-to-b from-neutral-900 via-black to-neutral-900 text-neutral-100 flex items-center justify-center p-6">
+    <div class="w-full max-w-2xl">
+        <div class="rounded-2xl border border-neutral-800 bg-neutral-900/60 shadow-2xl p-6 md:p-8">
+            <div class="mb-6">
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Payment</h1>
+                <p class="text-neutral-400 mt-1">Review your booking details and choose a payment method.</p>
+            </div>
 
-<div class="box">
-    <h2>Make a Payment</h2>
-    <p>Trip ID: <?php echo $trip['trip_id']; ?></p>
-    <p>Booking #: <?php echo $trip['booking_number']; ?></p>
-    <p>Distance: <?php echo number_format($trip['distance_km'], 2); ?> km</p>
-    <p>Fare: RM <?php echo number_format($trip['fare_amount'], 2); ?></p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="md:col-span-2 rounded-2xl border border-neutral-800 bg-black/30 p-4">
+                    <p class="text-neutral-400 text-sm">Trip ID</p>
+                    <p class="font-semibold mt-1"><?php echo $tripId; ?></p>
+                </div>
+                <div class="md:col-span-2 rounded-2xl border border-neutral-800 bg-black/30 p-4">
+                    <p class="text-neutral-400 text-sm">Booking No.</p>
+                    <p class="font-semibold mt-1"><?php echo $bookingNumber; ?></p>
+                </div>
+                <div class="rounded-2xl border border-neutral-800 bg-black/30 p-4">
+                    <p class="text-neutral-400 text-sm">Distance</p>
+                    <p class="font-semibold mt-1"><?php echo $distanceKm; ?> km</p>
+                </div>
+                <div class="rounded-2xl border border-neutral-800 bg-black/30 p-4">
+                    <p class="text-neutral-400 text-sm">Fare</p>
+                    <p class="font-semibold mt-1">RM <?php echo $fareAmount; ?></p>
+                </div>
+            </div>
 
-    <form method="POST">
-        <input type="hidden" name="trip_id" value="<?php echo $trip['trip_id']; ?>">
-        <input type="hidden" name="amount" value="<?php echo $trip['fare_amount']; ?>">
+            <form method="post" action="payment_process.php" class="space-y-5">
+                <input type="hidden" name="trip_id" value="<?php echo $tripData['trip_id']; ?>">
+                <input type="hidden" name="amount" value="<?php echo $tripData['fare_amount']; ?>">
 
-        <label>Payment Method:</label>
-        <select name="method" required>
-            <option value="">-- Select Method --</option>
-            <option value="cash">Cash (Pay Driver)</option>
-            <option value="qr">QR Payment</option>
-            <option value="ewallet">E-Wallet</option>
-            <option value="credit_card">Credit Card</option>
-            <option value="debit_card">Debit Card</option>
-        </select>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Payment Method</label>
+                    <select name="method" required class="w-full rounded-2xl border border-neutral-800 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60">
+                        <option value="">Select Method</option>
+                        <option value="cash">Cash (Pay driver)</option>
+                        <option value="qr">QR (Pay driver)</option>
+                        <option value="ewallet">E-Wallet (Pay driver)</option>
+                        <option value="credit_card">Credit Card</option>
+                        <option value="debit_card">Debit Card</option>
+                    </select>
+                    <p class="text-xs text-neutral-400 mt-2">
+                        Cash/QR/E-Wallet will be marked as
+                        <span class="font-semibold text-neutral-200">Pending</span> until the driver confirms.
+                        You can later return here and choose Credit/Debit Card to complete a pending payment.
+                    </p>
+                </div>
 
-        <button type="submit">Confirm & Pay</button>
-    </form>
-</div>
-
+                <div class="flex items-center gap-3 pt-2">
+                    <a href="index.php" class="inline-flex items-center justify-center rounded-2xl border border-neutral-800 px-4 py-2 hover:bg-white/5 transition">
+                        Cancel
+                    </a>
+                    <button type="submit" class="inline-flex items-center justify-center rounded-2xl bg-yellow-300 text-black px-5 py-2.5 font-semibold hover:opacity-90 transition">
+                        Pay Now
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

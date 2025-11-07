@@ -96,11 +96,83 @@ function selectUserByID($id){
             return null; //
         }
     }
+//hok ni bahagiay payment
+function UserEmail($email) {
+    global $conn;
+    $sql = "SELECT * FROM user_creds WHERE User_Email = '$email' LIMIT 1";
+    $result = $conn->query($sql);
+    return $result ? $result->fetch_assoc() : null;
+}
 
-    
+function thisUserTrip($trip_id, $user_id) {
+    global $conn;
+    $sql = "
+        SELECT t.trip_id
+        FROM Trip t
+        JOIN Booking b ON b.booking_number = t.booking_number
+        WHERE t.trip_id = '$trip_id' AND b.User_ID = '$user_id'
+        LIMIT 1
+    ";
+    $result = $conn->query($sql);
+    return $result && $result->num_rows > 0;
+}
 
+function isTripPaid($trip_id) {
+    global $conn;
+    $sql = "SELECT * FROM Payment WHERE trip_id = '$trip_id' LIMIT 1";
+    $result = $conn->query($sql);
+    return $result && $result->num_rows > 0;
+}
 
-    ?>
+function insertPayment($trip_id, $user_id, $amount, $method, $status) {
+    global $conn;
 
+    $method_upper = strtoupper($method);
+    if (in_array($method_upper, ["CASH", "QR", "EWALLET", "E-WALLET"])) {
+        $status = "Pending";
+    }
 
-     
+    $sql = "
+        INSERT INTO Payment (trip_id, User_ID, amount, method, status, paid_at)
+        VALUES ('$trip_id', '$user_id', '$amount', '$method', '$status', NOW())
+    ";
+    return $conn->query($sql);
+}
+
+function LatestUnpaidTrip($user_id) {
+    global $conn;
+    $sql = "
+        SELECT t.trip_id, t.fare_amount, t.distance_km, t.booking_number
+        FROM Trip t
+        JOIN Booking b ON b.booking_number = t.booking_number
+        LEFT JOIN Payment p ON p.trip_id = t.trip_id
+        WHERE b.User_ID = '$user_id' 
+          AND (p.trip_id IS NULL OR p.status != 'Paid')
+        ORDER BY t.created_at DESC 
+        LIMIT 1
+    ";
+    $result = $conn->query($sql);
+    return $result && $result->num_rows > 0 ? $result->fetch_assoc() : null;
+}
+
+function getPaymentByTrip($trip_id) {
+    global $conn;
+    $sql = "SELECT * FROM Payment WHERE trip_id = '$trip_id' ORDER BY paid_at DESC LIMIT 1";
+    $result = $conn->query($sql);
+    return ($result && $result->num_rows > 0) ? $result->fetch_assoc() : null;
+}
+
+function updatePendingPaymentToPaid($trip_id, $new_method) {
+    global $conn;
+    $new_method = $conn->real_escape_string($new_method);
+    $sql = "
+        UPDATE Payment
+        SET method = '$new_method', status = 'Paid', paid_at = NOW()
+        WHERE trip_id = '$trip_id' AND status = 'Pending'
+        ORDER BY paid_at DESC
+        LIMIT 1
+    ";
+    return $conn->query($sql);
+}
+//habih payment
+?>
