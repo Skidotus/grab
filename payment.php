@@ -11,7 +11,7 @@ if (!isset($_SESSION['email'])) {
 // --- Get user info ---
 $email = $_SESSION['email'];
 $getUser = "SELECT User_ID, User_Name FROM user_creds WHERE User_Email = '$email'";
-$userResult = $conn->query($getUser);
+$userResult = $connection->query($getUser);
 
 if ($userResult->num_rows == 0) {
     echo "User not found!";
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                   FROM Trip t 
                   JOIN Booking b ON b.booking_number = t.booking_number 
                   WHERE t.trip_id = '$trip_id' AND b.User_ID = '$User_ID'";
-    $checkResult = $conn->query($checkTrip);
+    $checkResult = $connection->query($checkTrip);
 
     if ($checkResult->num_rows == 0) {
         echo "Trip not found or not yours!";
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // --- Check if payment already made ---
     $checkPayment = "SELECT * FROM Payment WHERE trip_id = '$trip_id'";
-    $paymentResult = $conn->query($checkPayment);
+    $paymentResult = $connection->query($checkPayment);
 
     if ($paymentResult->num_rows > 0) {
         echo "You already made a payment for this trip.";
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $insertPayment = "INSERT INTO Payment (trip_id, User_ID, amount, method, status, paid_at)
                       VALUES ('$trip_id', '$User_ID', '$amount', '$method', '$status', NOW())";
 
-    if ($conn->query($insertPayment) === TRUE) {
+    if ($connection->query($insertPayment) === TRUE) {
         ?>
         <!DOCTYPE html>
         <html>
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php
         exit();
     } else {
-        echo "Error saving payment: " . $conn->error;
+        echo "Error saving payment: " . $connection->error;
         exit();
     }
 }
@@ -113,7 +113,7 @@ $sqlTrip = "SELECT t.trip_id, t.fare_amount, t.distance_km, t.booking_number
             WHERE b.User_ID = '$User_ID' AND (p.trip_id IS NULL OR p.status != 'Paid')
             ORDER BY t.created_at DESC LIMIT 1";
 
-$resultTrip = $conn->query($sqlTrip);
+$resultTrip = $connection->query($sqlTrip);
 
 if ($resultTrip->num_rows == 0) {
     echo "<p style='color:white;text-align:center;margin-top:100px;'>No unpaid trips found. Please make a booking first.</p>";

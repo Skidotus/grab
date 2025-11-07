@@ -28,57 +28,83 @@ if ($_POST) {
 
 $user = selectUserByEmail($_SESSION['email']);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
-    <link rel="stylesheet" href="styles/profile.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="profile-box">
-        <h2>Edit Profile</h2>
+<body class="min-h-screen bg-gradient-to-b from-neutral-900 via-black to-neutral-900 text-neutral-100 flex items-center justify-center p-6">
 
-        <?php if ($message): ?>
-            <div class="<?php echo strpos($message, '✅') !== false ? 'success-msg' : 'error-msg'; ?>">
-                <?php echo $message; ?>
-            </div>
-        <?php endif; ?>
+    <div class="w-full max-w-2xl">
+        <div class="rounded-2xl border border-neutral-800 bg-neutral-900/60 shadow-2xl p-8">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-yellow-300 text-center">Edit Profile</h2>
 
-        <form class="update-profile" method="POST">
-            <input type="hidden" name="ID" value="<?php echo $user['User_ID']; ?>">
+            <?php if ($message): ?>
+                <div class="mb-6 text-center <?php echo strpos($message, '✅') !== false ? 'text-green-400' : 'text-red-400'; ?>">
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
+            <?php endif; ?>
 
-            <label for="User_Name">Name:</label><br>
-            <input type="text" name="Name" value="<?php echo htmlspecialchars($user['User_Name']); ?>" required>
-            <br>
+            <form class="space-y-5" method="POST">
+                <input type="hidden" name="ID" value="<?php echo $user['User_ID']; ?>">
 
-            <label for="User_Email"><br>Email:</label><br>
-            <input type="email" name="Email" value="<?php echo htmlspecialchars($user['User_Email']); ?>" required>
-            <br>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Name</label>
+                    <input type="text" name="Name" value="<?php echo htmlspecialchars($user['User_Name']); ?>"
+                        class="w-full rounded-xl border border-neutral-700 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60"
+                        required>
+                </div>
 
-            <label for="User_Pass"><br>Password:</label><br>
-            <input type="password" name="Password" placeholder="Enter new password"><br>
-            <br>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" name="Email" value="<?php echo htmlspecialchars($user['User_Email']); ?>"
+                        class="w-full rounded-xl border border-neutral-700 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60"
+                        required>
+                </div>
 
-            <label for="User_Address">Address:</label><br>
-            <input type="address" name="Address" value="<?php echo htmlspecialchars($user['User_Address']); ?>"><br>
-            <br>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Password</label>
+                    <input type="password" name="Password" placeholder="Enter new password"
+                        class="w-full rounded-xl border border-neutral-700 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60">
+                    <p class="text-xs text-neutral-400 mt-1">Leave blank to keep your current password.</p>
+                </div>
 
-            <label for="User_Phone">Phone Number:</label><br>
-            <input type="phonenumber" name="Phone" value="<?php echo htmlspecialchars($user['User_Phone']); ?>"><br>
-            <br>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Address</label>
+                    <input type="text" name="Address" value="<?php echo htmlspecialchars($user['User_Address']); ?>"
+                        class="w-full rounded-xl border border-neutral-700 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60">
+                </div>
 
-            <label for="User_Birthdate">Birth Date:</label><br>
-            <input type="birthdate" name="Birthdate" value="<?php echo htmlspecialchars($user['User_Birthdate']); ?>">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Phone Number</label>
+                        <input type="text" name="Phone" value="<?php echo htmlspecialchars($user['User_Phone']); ?>"
+                            class="w-full rounded-xl border border-neutral-700 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Birth Date</label>
+                        <input type="date" name="Birthdate" value="<?php echo htmlspecialchars($user['User_Birthdate']); ?>"
+                            class="w-full rounded-xl border border-neutral-700 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60">
+                    </div>
+                </div>
 
-
-            <div class="btn-box">
-                <button type="submit" class="btn">Save</button>
-                <a href="profile.php" class="btn logout">Back</a>
-
-            </div>
-        </form>
+                <div class="flex items-center justify-center gap-4 pt-4">
+                    <button type="submit"
+                        class="inline-flex items-center justify-center rounded-2xl bg-yellow-300 text-black px-6 py-2.5 font-semibold hover:opacity-90 transition">
+                        Save Changes
+                    </button>
+                    <a href="profile.php"
+                        class="inline-flex items-center justify-center rounded-2xl border border-neutral-700 px-6 py-2.5 hover:bg-white/5 transition">
+                        Back
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
+
 </body>
 </html>
