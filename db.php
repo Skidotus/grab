@@ -4,10 +4,10 @@ $dbname = 'student_transport';
 $dbusername = 'root';
 $dbpassword = '';
 
-$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+$connection = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($connection->connect_error) {
+    die("Connection failed: " . $connection->connect_error);
 }
 
     function register($username, $email, $password, $phonenumber, $address, $birthdate, $filename) {
@@ -22,11 +22,11 @@ if ($conn->connect_error) {
         return $connection->query($sql);
     }
 
-function login($email, $password) {
-    global $conn;
+    function login($email, $password) {
+    global $connection;
     $sql = "SELECT * FROM user_creds 
             WHERE User_Email = '$email' AND User_Pass = '$password'";
-    $result = $conn->query($sql);
+    $result = $connection->query($sql);
     return $result->fetch_assoc();
 }
 
@@ -45,15 +45,15 @@ function login($email, $password) {
     }
 
 function deleteUserByID($id){
-    global $conn;
+    global $connection;
     $sql = "DELETE FROM user_creds WHERE User_ID = '$id'";
-    $conn->query($sql);
+    $connection->query($sql);
 }
 
 function selectUserByID($id){
-    global $conn;
+    global $connection;
     $sql = "SELECT * FROM user_creds WHERE User_ID ='$id'";
-    $result = $conn->query($sql);
+    $result = $connection->query($sql);
     return $result->fetch_assoc();
 }
 
