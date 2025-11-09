@@ -163,8 +163,8 @@ function LatestUnpaidTrip($user_id) {
         LEFT JOIN Payment p ON p.trip_id = t.trip_id
         WHERE b.User_ID = '$user_id' 
           AND (p.trip_id IS NULL OR p.status != 'Paid')
-        ORDER BY t.created_at DESC 
-        LIMIT 1
+        ORDER BY t. created_at DESC 
+        LIMIT 1 
     ";
     $result = $conn->query($sql);
     return $result && $result->num_rows > 0 ? $result->fetch_assoc() : null;

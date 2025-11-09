@@ -128,7 +128,7 @@ else{
 
             </div>
             <!-- Submit Button -->
-
+            <input type="hidden" id="distance" name="distance" />
             <button type="submit"
                 class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition">
                 Get Ride
@@ -305,8 +305,15 @@ else{
                 if (dropoffMarker) { dropoffMarker.remove(); dropoffMarker = null; }
 
 
-                loadRoute(map,chosedPickupCoords,chosedDropoffCoords);
-
+                loadRoute(map, chosedPickupCoords, chosedDropoffCoords, function(result) {
+                    if (result && typeof result.distance !== "undefined") {
+                        document.getElementById('distance').value = result.distance;
+                        // Optionally show it to user:
+                        document.getElementById('output').textContent = `Distance: ${(result.distance/1000).toFixed(2)} km`;
+                    }else{
+                        document.getElementById('output').textContent = `Error calculating route.`;
+                    }
+                });
             });
         });
     </script>

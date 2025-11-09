@@ -1,5 +1,6 @@
 <?php
 require "db.php";
+require "fareMaker.php";
 session_start();
 if (!isset($_SESSION["email"])) {
     header("Location: login.php");
@@ -33,13 +34,13 @@ if ($_POST) {
     // Insert booking into database
     $email = $_SESSION["email"];
     create_booking($user_id, $current_user_coords, $pickupCoords, $dropoffCoords, $pickupLocation, $dropoffLocation);
+    $distance = $_POST['distance']/1000; // convert to km
+    $fare = ceil(calculateFare($distance));
 }
 
 
 
 // echo "<h2>Lat:$pickup[0] Lng:$pickup[1]</h2>";
-
-
 
 
 ?>
@@ -71,6 +72,14 @@ if ($_POST) {
             </div>
             <br>
             <div class="flex-row ">
+                <h1 class="flex text-xl">Distance</h1>
+                <?php echo "<h1 class='flex text-xl'>$distance km</h1>"; ?>
+            </div>
+            <div class="flex-row ">
+                <h1 class="flex text-xl">Fare</h1>
+                <?php echo "<h1 class='flex text-xl'>RM $fare</h1>"; ?>
+            </div>
+            <div class="flex-row ">
                 <h1 class="flex text-xl">Pickup Location</h1>
                 <?php echo "<h1 class='flex text-xl'>$pickupLocation</h1>"; ?>
             </div>
@@ -94,6 +103,9 @@ if ($_POST) {
                 
                 <form action="cancel_booking.php" method="POST" >
                     <button type="submit" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Cancel Booking</button>
+                </form>
+                <form action="user_bookings.php" method="POST" >
+                    <button type="submit" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Continue</button>
                 </form>
                 
             </div>

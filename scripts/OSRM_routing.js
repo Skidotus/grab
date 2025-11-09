@@ -1,5 +1,5 @@
 // ...existing code...
-async function loadRoute(map, start, end) {
+async function loadRoute(map, start, end, onResult) {
     // request geojson geometry and full overview
     const osrmurl = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&overview=full`;
     try {
@@ -9,6 +9,11 @@ async function loadRoute(map, start, end) {
         if (data.code !== 'Ok' || !data.routes || !data.routes.length) throw new Error('OSRM error: ' + data.code);
 
         const route = data.routes[0];
+        const distance = route.distance; // in meters
+        const duration = route.duration; // in seconds
+        console.log('Route distance:', distance, 'meters');
+        console.log('Route duration:', duration, 'seconds');
+
         const geom = route.geometry; // now a GeoJSON LineString
 
         // wrap as a Feature so maplibre can consume it
@@ -47,7 +52,9 @@ async function loadRoute(map, start, end) {
         ];
         map.fitBounds(bounds, { padding: 50 });
 
-       
+        if (typeof onResult === "function") {
+            onResult({ distance, duration });
+        }
 
     } catch (err) {
         console.error('loadRoute error', err);

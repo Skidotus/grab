@@ -29,7 +29,7 @@ $pending_bookings = select_pending_bookings();
             echo '
             <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_profile.php?id=">Driver Profile</a>
             <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_booking.php?id=">Driver Booking</a>
-            <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="">Help</a>
+            <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="logout.php">Logout</a>
             ';
             ?>
         </div>
