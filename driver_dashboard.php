@@ -58,11 +58,12 @@ $pending_bookings = select_pending_bookings();
         <?php
         foreach ($pending_bookings as $booking) {
             echo '<div class="bg-gray-800 border-2 rounded-lg p-2 my-2 h-auto shadow-lg ">';
+            echo '<div class="border-2 m-2 p-2 rounded-lg flex flex-col">' . '<h1>Booking ID:</h1>' . $booking['booking_ID'] . "</div>";
             echo '<div class="border-2 m-2 p-2 rounded-lg flex flex-col">' . '<h1>Customer ID:</h1>' . $booking['user_ID'] . "</div>";
             echo '<div class="p-2 m-2 border-2 rounded-lg ">'.'<h1>Current Location:'.$booking['user_location'].'</h1>'.'</div>';
             echo '<div class="p-2 m-2 border-2 rounded-lg ">'.'<h1>Pickup Location:'.$booking['pickup_location'].'</h1>'.'</div>';
             echo '<div class="p-2 m-2 border-2 rounded-lg ">'.'<h1>Dropoff Location:'.$booking['dropoff_location'].'</h1>'.'</div>';
-            echo '<div class="p-2 m-2 flex justify-end">'.'<a  class="border-2 rounded-lg bg-amber-300 w-max p-2 m-2 flex justify-right" href="accept.php?booking_id='.$booking['booking_id'].'">'.'Accept'.'</a>'.'</div>';
+            echo '<div class="p-2 m-2 flex justify-end">'.'<a  class="border-2 rounded-lg bg-amber-300 w-max p-2 m-2 flex justify-right" href="accept.php?booking_id='.$booking['booking_ID'].'">'.'Accept'.'</a>'.'</div>';
             echo '</div>';
 
         }

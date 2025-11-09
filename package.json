@@ -20,6 +20,6 @@
   "homepage": "https://github.com/Skidotus/grab#readme",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.15",
-    "tailwindcss": "^4.1.15"
+    "tailwindcss": "^4.1.17"
   }
 }
