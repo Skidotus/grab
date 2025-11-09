@@ -12,4 +12,9 @@ Below are the specicifications of the program
 - Registration and cross validation for students and drivers
 - Map based location pinning
 
-# 
+# Steps for Tailwind
+- Unless you are using npm, and node to run , then need to run this command
+
+```bash
+npx @tailwindcss/cli -i ./styles/input.css -o ./styles/output.css --watch
+```
