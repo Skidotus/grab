@@ -9,7 +9,10 @@ if ($_POST) {
     $draddress = $_POST['draddress'];
     $drbirthdate = $_POST['drbirthdate'];
 
-    if (registerdriver($drusername, $dremail, $drpassword, $drphonenumber, $draddress, $drbirthdate)) {
+    $picture = $_FILES['uploadimage'];
+    $filename = uploadImage($picture);
+
+    if (registerdriver($drusername, $dremail, $drpassword, $drphonenumber, $draddress, $drbirthdate,$filename)) {
         header("Location: driver_login.php");
         exit();
     }
@@ -41,7 +44,7 @@ if ($_POST) {
                 <h1 class="text-3xl font-bold text-blue-400 text-center">Driver Registration</h1>
             </div>
 
-            <form method="POST" class="space-y-5">
+            <form method="POST" enctype="multipart/form-data" class="space-y-5">
 
                 <div>
                     <label for="drusername" class="block text-sm font-medium mb-2">Full Name</label>
@@ -77,6 +80,12 @@ if ($_POST) {
                     <label for="draddress" class="block text-sm font-medium mb-2">Address (optional)</label>
                     <input type="text" id="draddress" name="draddress"
                         class="w-full rounded-xl border border-slate-700 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-400/60">
+                </div>
+
+                <div>
+                    <label for="uploadimage" class="block text-sm font-medium mb-2">Profile Picture (optional)</label>
+                    <input type="file" id="uploadimage" name="uploadimage"
+                        class="w-full text-sm text-neutral-300 border border-neutral-700 rounded-xl cursor-pointer bg-black/40 focus:ring-2 focus:ring-yellow-300/60">
                 </div>
 
                 <button type="submit"

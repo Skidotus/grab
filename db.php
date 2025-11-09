@@ -16,9 +16,9 @@ if ($conn->connect_error) {
         return $conn->query($sql);
     }
 
-    function registerdriver($drusername, $dremail, $drpassword, $drphonenumber, $draddress, $drbirthdate) {
+    function registerdriver($drusername, $dremail, $drpassword, $drphonenumber, $draddress, $drbirthdate, $filename) {
         global $conn;
-        $sql = "INSERT INTO drivers (Driver_Name, Driver_Email, Driver_Pass, Driver_Phone, Driver_Address, Driver_Birthdate) VALUES ('$drusername', '$dremail', '$drpassword', '$drphonenumber', '$draddress', '$drbirthdate')";
+        $sql = "INSERT INTO drivers (Driver_Name, Driver_Email, Driver_Pass, Driver_Phone, Driver_Address, Driver_Birthdate, Driver_Picture) VALUES ('$drusername', '$dremail', '$drpassword', '$drphonenumber', '$draddress', '$drbirthdate', '$filename')";
         return $conn->query($sql);
     }
 
@@ -44,18 +44,18 @@ if ($conn->connect_error) {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-function deleteUserByID($id){
-    global $conn;
-    $sql = "DELETE FROM user_creds WHERE User_ID = '$id'";
-    $conn->query($sql);
-}
+    function deleteUserByID($id){
+        global $conn;
+        $sql = "DELETE FROM user_creds WHERE User_ID = '$id'";
+        $conn->query($sql);
+    }
 
-function selectUserByID($id){
-    global $conn;
-    $sql = "SELECT * FROM user_creds WHERE User_ID ='$id'";
-    $result = $conn->query($sql);
-    return $result->fetch_assoc();
-}
+    function selectUserByID($id){
+        global $conn;
+        $sql = "SELECT * FROM user_creds WHERE User_ID ='$id'";
+        $result = $conn->query($sql);
+        return $result->fetch_assoc();
+    }
 
     function updateByID($id, $username, $email, $password, $address, $birthdate, $phonenumber){
         global $conn;
@@ -96,6 +96,21 @@ function selectUserByID($id){
             return null; //
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //hok ni bahagiay payment
 function UserEmail($email) {
     global $conn;
