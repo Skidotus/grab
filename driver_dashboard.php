@@ -6,73 +6,70 @@ if (!isset($_SESSION['dremail'])) {
     header("Location: driver_login.php");
     exit;
 }
+
+$pending_bookings = select_pending_bookings();
+
+//$totalearnings
 ?>
 
 <!DOCTYPE html>
-<html lang="en" class="bg-gray-950 text-white">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driver Dashboard | Student Transport</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Driver's Dashboard</title>
+    <link href="./styles/output.css" rel="stylesheet">
 </head>
 
-<body class="min-h-screen flex flex-col">
-
-    <!-- HEADER -->
-    <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg py-4 px-6 flex justify-between items-center">
-        <h1 class="text-2xl font-bold tracking-wide">🚐 Student Transport</h1>
-        <div class="text-right">
-            <p class="text-sm">Welcome,</p>
-            <p class="font-semibold text-lg"><?php echo $_SESSION['dremail']; ?></p>
+<body class="bg-gray-900 text-white">
+    <div class="w-auto my-2 mx-8  p-2 shadow-lg rounded-lg  flex gap-2">
+        <div class="flex-1 p-2 flex flex-col border-2 border-gray-200 rounded-lg">
+            <?php
+            echo '
+            <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_profile.php?id=">Driver Profile</a>
+            <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_booking.php?id=">Driver Booking</a>
+            <a class="rounded-lg my-2 p-2 hover:bg-gray-600" href="">Help</a>
+            ';
+            ?>
         </div>
-    </header>
-
-    <!-- NAVIGATION -->
-    <nav class="bg-gray-800 border-b border-gray-700 flex justify-center space-x-6 py-3">
-        <button onclick="window.location.href='booking.html'"
-            class="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 transition">Book Transport</button>
-        <button onclick="window.location.href='data-display.js'"
-            class="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 transition">My Bookings</button>
-        <button onclick="window.location.href='driver_profile.php'"
-            class="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 transition">Profile</button>
-    </nav>
-
-    <!-- MAIN CONTENT -->
-    <main class="flex-grow container mx-auto p-6">
-        <section class="bg-gray-900 rounded-2xl shadow-xl p-6">
-            <h2 class="text-xl font-semibold mb-6 border-b border-gray-700 pb-2">Quick Summary</h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div class="bg-gray-800 p-5 rounded-xl shadow-md hover:shadow-lg transition">
-                    <h3 class="text-lg font-semibold mb-2">Upcoming Ride</h3>
-                    <p class="text-gray-400">No rides booked</p>
-                </div>
-                <div class="bg-gray-800 p-5 rounded-xl shadow-md hover:shadow-lg transition">
-                    <h3 class="text-lg font-semibold mb-2">Bookings History</h3>
-                    <p class="text-gray-400">0</p>
-                </div>
-                <div class="bg-gray-800 p-5 rounded-xl shadow-md hover:shadow-lg transition">
-                    <h3 class="text-lg font-semibold mb-2">Account Status</h3>
-                    <p class="text-green-400 font-semibold">Active</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- LOGOUT BUTTON -->
-        <div class="flex justify-center mt-8">
-            <a href="logout.php"
-                class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold shadow-md transition">
-                Logout
-            </a>
+        <div class="flex-2 p-2 flex  border-2 border-gray-200 rounded-lg content-around">
+            <?php
+            echo '
+            <a class="text-center flex-1 rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_profile.php?id=">Total Earnings</a>
+            <a class="text-center flex-1 rounded-lg my-2 p-2 hover:bg-gray-600" href="driver_booking.php?id=">Total Trip</a>
+            <a class="text-center flex-1 rounded-lg my-2 p-2 hover:bg-gray-600" href="">Distance Travelled</a>
+            <a class="text-center flex-1 rounded-lg my-2 p-2 hover:bg-gray-600" href="">RM/km</a>
+            ';
+            ?>
         </div>
-    </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-gray-900 text-gray-500 text-center py-3 text-sm">
-        © <?php echo date('Y'); ?> Student Transport | Driver Dashboard
-    </footer>
+    </div>
+    <div class="w-auto mx-10 p-1 shadow-lg rounded-lg border-2 border-gray-200">
+        <div class="p-2">
+            <h1 class="text-center text-2xl "> Available Bookings</h1>
+
+        </div>
+    </div>
+  
+    <!-- New div card for bookings-->
+
+    <div class=" mx-10 my-2  flex flex-col gap-2 w-auto h-auto ">
+        <?php
+        foreach ($pending_bookings as $booking) {
+            echo '<div class="bg-gray-800 border-2 rounded-lg p-2 my-2 h-auto shadow-lg ">';
+            echo '<div class="border-2 m-2 p-2 rounded-lg flex flex-col">' . '<h1>Customer ID:</h1>' . $booking['user_ID'] . "</div>";
+            echo '<div class="p-2 m-2 border-2 rounded-lg ">'.'<h1>Current Location:'.$booking['user_location'].'</h1>'.'</div>';
+            echo '<div class="p-2 m-2 border-2 rounded-lg ">'.'<h1>Pickup Location:'.$booking['pickup_location'].'</h1>'.'</div>';
+            echo '<div class="p-2 m-2 border-2 rounded-lg ">'.'<h1>Dropoff Location:'.$booking['dropoff_location'].'</h1>'.'</div>';
+            echo '<div class="p-2 m-2 flex justify-end">'.'<a  class="border-2 rounded-lg bg-amber-300 w-max p-2 m-2 flex justify-right" href="accept.php?booking_id='.$booking['booking_id'].'">'.'Accept'.'</a>'.'</div>';
+            echo '</div>';
+
+        }
+        ?>
+    </div>
+
 
 </body>
+
 </html>

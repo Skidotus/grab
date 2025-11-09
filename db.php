@@ -175,4 +175,14 @@ function updatePendingPaymentToPaid($trip_id, $new_method) {
     return $conn->query($sql);
 }
 //habih payment
+
+
+function select_pending_bookings()
+{
+    global $conn;
+    $sql = "SELECT booking_number AS booking_ID,user_ID,ST_AsWKT(current_user_location) AS user_location , ST_AsWKT(user_pickup_location) AS pickup_location, ST_AsWKT(user_dropoff_location) AS dropoff_location ,status FROM booking where status='pending'";
+    $result = $conn->query($sql);
+    return $result;
+
+}
 ?>
