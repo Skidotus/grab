@@ -6,15 +6,33 @@ if (!isset($_SESSION["email"])) {
 }
 
 if ($_POST) {
+
+    $user_ID_stmt = "SELECT User_ID FROM user_creds WHERE User_Email = '" . $_SESSION["email"] . "'";
+    $result = $conn->query($user_ID_stmt);
+    $user = $result->fetch_assoc();
+    $user_id = $user['User_ID'];
+
     $pickupLocation = $_POST["pickupLocation"];
     $pickupCoords = $_POST["pickupCoords"];
     $dropoffLocation = $_POST["dropoffLocation"];
     $dropoffCoords = $_POST["dropoffCoords"];
 
+    $current_user_coords = $pickupCoords;
+
     // to slice string
 
     $pickup = explode(",", $pickupCoords);
     $dropoff = explode(",", $dropoffCoords);
+
+    $pickupLat = $pickup[0];
+    $pickupLng = $pickup[1];
+
+    $dropoffLat = $dropoff[0];
+    $dropoffLng = $dropoff[1];
+
+    // Insert booking into database
+    $email = $_SESSION["email"];
+    create_booking($user_id, $current_user_coords, $pickupCoords, $dropoffCoords, $pickupLocation, $dropoffLocation);
 }
 
 
@@ -59,6 +77,25 @@ if ($_POST) {
 
             <div class="flex-col flex-wrap">
                 <?php echo "<h1 class='text-xl'>Lat:$pickup[0] Lng:$pickup[1]</h2>"; ?>
+            </div>
+            <br>
+            <div class="flex-row ">
+                <h1 class="flex text-xl">Dropoff Location</h1>
+                <?php echo "<h1 class='flex text-xl'>$dropoffLocation</h1>"; ?>
+            </div>
+
+            <div class="flex-col flex-wrap">
+                <?php echo "<h1 class='text-xl'>Lat:$dropoff[0] Lng:$dropoff[1]</h2>"; ?>
+            </div>
+
+            <div>
+                <h1>Please wait while we find a driver for you...</h1>
+                <br>
+                
+                <form action="cancel_booking.php" method="POST" >
+                    <button type="submit" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Cancel Booking</button>
+                </form>
+                
             </div>
         </div>
 

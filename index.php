@@ -32,7 +32,7 @@ $email = $_SESSION['email'];
 
         <!-- Sidebar -->
         <nav class="w-64 border-r border-neutral-800 bg-black/30 p-6 flex flex-col space-y-3">
-            <button onclick="window.location.href='booking.html'" class="rounded-xl px-4 py-3 bg-neutral-800/40 hover:bg-yellow-300 hover:text-black transition font-medium text-left">🚗 Book Transport</button>
+            <button onclick="window.location.href='ride_booking.php'" class="rounded-xl px-4 py-3 bg-neutral-800/40 hover:bg-yellow-300 hover:text-black transition font-medium text-left">🚗 Book Transport</button>
             <button onclick="window.location.href='data-display.php'" class="rounded-xl px-4 py-3 bg-neutral-800/40 hover:bg-yellow-300 hover:text-black transition font-medium text-left">📋 My Bookings</button>
             <button onclick="window.location.href='profile.php'" class="rounded-xl px-4 py-3 bg-neutral-800/40 hover:bg-yellow-300 hover:text-black transition font-medium text-left">👤 Profile</button>
             <button onclick="window.location.href='payment.php'" class="rounded-xl px-4 py-3 bg-neutral-800/40 hover:bg-yellow-300 hover:text-black transition font-medium text-left">💳 Make Payment</button>

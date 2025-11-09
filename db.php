@@ -191,7 +191,7 @@ function updatePendingPaymentToPaid($trip_id, $new_method) {
 }
 //habih payment
 
-
+// Select all pending bookings
 function select_pending_bookings()
 {
     global $conn;
@@ -199,5 +199,25 @@ function select_pending_bookings()
     $result = $conn->query($sql);
     return $result;
 
+}
+
+// Create a new booking
+function create_booking($user_id,$current_user_coords, $pickup_coords, $dropoff_coords,$pickup_location,$dropoff_location )
+{
+    global $conn;
+
+    list($cur_lng, $cur_lat) = explode(',', $current_user_coords);
+    list($pick_lng, $pick_lat) = explode(',', $pickup_coords);
+    list($drop_lng, $drop_lat) = explode(',', $dropoff_coords);
+
+    $sql = "INSERT INTO booking (User_ID,current_user_location, user_pickup_location, user_dropoff_location,  status, created_at,pickup_location,dropoff_location) VALUES ('$user_id', ST_GeomFromText('POINT($cur_lng $cur_lat)',4326), ST_GeomFromText('POINT($pick_lng $pick_lat)',4326), ST_GeomFromText('POINT($drop_lng $drop_lat)',4326), 'pending', NOW(),'$pickup_location','$dropoff_location')";
+    return $conn->query($sql);
+}
+// Update booking status
+function update_booking_status($booking_number, $status)
+{
+    global $conn;
+    $sql = "UPDATE booking SET status='$status' WHERE booking_number='$booking_number'";
+    return $conn->query($sql);
 }
 ?>

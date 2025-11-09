@@ -47,9 +47,9 @@ else{
 <body>
 
     <div id="map"></div>
-    <div class="absolute top-6 left-6  bg-white/90 backdrop-blur-sm p-6  rounded-2xl shadow-xl w-80 z-10">
+    <div class="absolute top-6 left-6  bg-white/90 backdrop-blur-sm p-6  rounded-2xl shadow-xl w-80 z-10" style="max-height: calc(100vh - 3rem); overflow-y: auto;">
 
-        <h2 class="text-xl font-semibold text-gray-800 text-center mb-4">Booking Form</h2>
+        <h2 class="text-xl font-semibold text-gray-800 text-center mb-4 ">Booking Form</h2>
 
 
 
