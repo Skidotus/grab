@@ -1,8 +1,8 @@
 <?php
 $servername = '127.0.0.1';
 $dbname = 'student_transport';
-$dbusername = 'pma';
-$dbpassword = 'SuperStrongPass123!';
+$dbusername = 'root';
+$dbpassword = 'prime1208';
 // $dbusername = 'root';
 // $dbpassword = '';
 
