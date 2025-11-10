@@ -88,9 +88,12 @@ $user = selectDriverByEmail($_SESSION['dremail']);
 
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
-                    <input type="password" name="drPassword" placeholder="Enter new password"
-                           class="w-full px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    <input type="password" name="drPassword" 
+                        value="<?php echo isset($user['Driver_Password']) ? htmlspecialchars($user['Driver_Password'], ENT_QUOTES) : ''; ?>"
+                        class="w-full px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    <p class="text-xs text-gray-400 mt-1">Leave blank to keep your current password.</p>
                 </div>
+
 
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1">Address</label>

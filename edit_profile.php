@@ -68,10 +68,13 @@ $user = selectUserByEmail($_SESSION['email']);
 
                 <div>
                     <label class="block text-sm font-medium mb-1">Password</label>
-                    <input type="password" name="Password" placeholder="Enter new password"
+                    <input type="password" name="Password" 
+                        value="<?php echo isset($user['User_Password']) ? htmlspecialchars($user['User_Password'], ENT_QUOTES) : ''; ?>"
                         class="w-full rounded-xl border border-neutral-700 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60">
                     <p class="text-xs text-neutral-400 mt-1">Leave blank to keep your current password.</p>
                 </div>
+
+
 
                 <div>
                     <label class="block text-sm font-medium mb-1">Address</label>
