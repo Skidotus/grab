@@ -7,6 +7,16 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 $email = $_SESSION['email'];
+
+// Get the number of bookings for the user
+$total_bookings = count_user_bookings($email);
+
+// Get the User_ID based on the email
+$user = selectUserByEmail($email);
+$user_id = $user['User_ID'];
+
+// Get upcoming rides
+$upcoming_rides = get_upcoming_rides($user_id);
 ?>
 
 <!DOCTYPE html>
@@ -52,12 +62,24 @@ $email = $_SESSION['email'];
                     <!-- Upcoming Ride -->
                     <div class="rounded-2xl border border-neutral-800 bg-black/30 p-6 shadow-lg hover:shadow-yellow-300/10 transition">
                         <h3 class="text-lg font-semibold mb-2 text-yellow-300">Upcoming Ride</h3>
-                        <p class="text-neutral-400">No rides booked</p>
+                        <ul>
+                    <?php if (empty($upcoming_rides)): ?>
+                        <li class="text-neutral-400">No upcoming rides.</li>
+                    <?php else: ?>
+                        <?php foreach ($upcoming_rides as $ride): ?>
+                            <li class="text-neutral-400">
+                                Booking Number: <?php echo htmlspecialchars($ride['booking_number']); ?>, 
+                                Pickup Location: <?php echo htmlspecialchars($ride['pickup_location']); ?>, 
+                                Dropoff Location: <?php echo htmlspecialchars($ride['dropoff_location']); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
                     </div>
                     <!-- Bookings History -->
                     <div class="rounded-2xl border border-neutral-800 bg-black/30 p-6 shadow-lg hover:shadow-yellow-300/10 transition">
                         <h3 class="text-lg font-semibold mb-2 text-yellow-300">Bookings History</h3>
-                        <p class="text-neutral-400">0</p>
+                        <p class="text-neutral-400"><?php echo $total_bookings; ?></p> <!-- Display total bookings -->
                     </div>
                     <!-- Account Status -->
                     <div class="rounded-2xl border border-neutral-800 bg-black/30 p-6 shadow-lg hover:shadow-yellow-300/10 transition">
@@ -76,6 +98,8 @@ $email = $_SESSION['email'];
                     </button>
                 </div>
             </section>
+
+           
         </main>
     </div>
 </body>
