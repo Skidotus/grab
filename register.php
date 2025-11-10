@@ -1,6 +1,8 @@
 <?php
 require 'db.php';
 
+$errorMessage = '';
+
 if ($_POST) {
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -9,12 +11,23 @@ if ($_POST) {
     $address = $_POST['address'];
     $birthdate = $_POST['birthdate'];
 
-    $picture = $_FILES['uploadimage'];
-    $filename = uploadImage($picture);
+    // Validate birthdate
+    $birthDateTime = new DateTime($birthdate);
+    $currentDateTime = new DateTime();
+    $age = $currentDateTime->diff($birthDateTime)->y;
 
-    if (register($username, $email, $password, $phonenumber, $address, $birthdate, $filename)) {
-        header("Location: login.php");
-        exit();
+    if ($age < 19) {
+        $errorMessage = "You must be at least 19 years old to register.";
+    }
+
+    if (empty($errorMessage)) {
+        $picture = $_FILES['uploadimage'];
+        $filename = uploadImage($picture);
+
+        if (register($username, $email, $password, $phonenumber, $address, $birthdate, $filename)) {
+            header("Location: login.php");
+            exit();
+        }
     }
 }
 ?>
@@ -26,9 +39,26 @@ if ($_POST) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Student Transport</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorMessage = "<?php echo addslashes($errorMessage); ?>";
+            if (errorMessage) {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('hidden');
+                toast.innerText = errorMessage;
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 5000);
+            }
+        });
+    </script>
 </head>
 
 <body class="min-h-screen bg-gradient-to-b from-neutral-900 via-black to-neutral-900 text-neutral-100 flex items-center justify-center p-6">
+
+    <div id="toast" class="hidden fixed top-5 right-5 bg-red-500 text-white p-3 rounded-lg shadow-lg">
+        <!-- Error message will be displayed here -->
+    </div>
 
     <div class="w-full max-w-md">
         <div class="rounded-2xl border border-neutral-800 bg-neutral-900/60 shadow-2xl p-8">
