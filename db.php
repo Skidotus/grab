@@ -283,4 +283,23 @@ function count_user_bookings($user_email) {
         return 0; // No user found
     }
 }
+
+function get_upcoming_rides($user_id) {
+    global $conn;
+    $sql = "SELECT booking_number, pickup_location, dropoff_location 
+            FROM booking 
+            WHERE User_ID = ? AND status = 'accepted' 
+            ORDER BY created_at ASC"; // Assuming 'accepted' is the status for accepted rides
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $rides = [];
+    while ($row = $result->fetch_assoc()) {
+        $rides[] = $row;
+    }
+    return $rides;
+}
 ?>
