@@ -220,4 +220,41 @@ function update_booking_status($booking_number, $status)
     $sql = "UPDATE booking SET status='$status' WHERE booking_number='$booking_number'";
     return $conn->query($sql);
 }
+// Get all unpaid trips for a user
+function getAllUnpaidTrips($user_id) {
+    global $conn;
+    $sql = "SELECT t.*, b.User_ID 
+            FROM trip t 
+            JOIN booking b ON t.booking_number = b.booking_number 
+            LEFT JOIN payment p ON t.trip_id = p.trip_id 
+            WHERE b.User_ID = ? 
+            AND (p.status IS NULL OR p.status = 'pending')
+            ORDER BY t.created_at DESC";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $trips = [];
+    while ($row = $result->fetch_assoc()) {
+        $trips[] = $row;
+    }
+    return $trips;
+}
+
+function getTripById($trip_id) {
+    global $conn;
+    $sql = "SELECT t.*, b.User_ID 
+            FROM trip t 
+            JOIN booking b ON t.booking_number = b.booking_number 
+            WHERE t.trip_id = ?";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $trip_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    return $result->fetch_assoc();
+}
 ?>

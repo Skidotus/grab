@@ -22,23 +22,50 @@ if ($_GET) {
     $driver = $result->fetch_assoc();
     $driver_id = $driver['Driver_ID'];
 
-    // Get pickup coordinates from booking
-    $coords_stmt = "SELECT ST_X(user_pickup_location) AS lon, ST_Y(user_pickup_location) AS lat FROM booking WHERE booking_number = '$booking_id'";
+    // Get booking details with pickup and dropoff coordinates
+    $coords_stmt = "SELECT 
+        ST_X(user_pickup_location) AS pickup_lon, 
+        ST_Y(user_pickup_location) AS pickup_lat,
+        ST_X(user_dropoff_location) AS dropoff_lon, 
+        ST_Y(user_dropoff_location) AS dropoff_lat,
+        pickup_location,
+        dropoff_location
+    FROM booking 
+    WHERE booking_number = '$booking_id'";    
     $coords_result = $conn->query($coords_stmt);
     if ($coords_result && $coords_result->num_rows > 0) {
         $coords = $coords_result->fetch_assoc();
-        $pickup_coords = $coords['lat'] . "," . $coords['lon']; // format for map URLs
-    }
+        $pickup_coords = $coords['pickup_lat'] . "," . $coords['pickup_lon'];
+        
+        // Calculate distance and fare
+        $distance = $_POST['distance'] ?? 0; // Get from OSRM calculation
+        $fare = ceil(calculateFare($distance/1000)); // Convert to km for fare calculation
+        
+        // Update booking status to 'accepted' and assign driver
+        $stmt = "UPDATE booking SET status = 'accepted' WHERE booking_number = '$booking_id'";
+        
+        // Insert into trip with distance and fare
+        $trip_stmt = "INSERT INTO trip (
+            booking_number, 
+            Driver_ID, 
+            created_at,
+            distance_km,
+            fare_amount
+        ) VALUES (
+            '$booking_id', 
+            '$driver_id', 
+            NOW(),
+            '$distance',
+            '$fare'
+        )";
+        
+        $conn->query($trip_stmt);
 
-    // Update booking status to 'accepted' and assign driver
-    $stmt = "UPDATE booking SET status = 'accepted' WHERE booking_number = '$booking_id'";
-    $trip_stmt = "INSERT INTO trip (booking_number, Driver_ID, created_at) VALUES ('$booking_id', '$driver_id', NOW())";
-    $conn->query($trip_stmt);
-
-    if ($conn->query($stmt) === TRUE) {
-        $message = "Booking accepted successfully. Trip started.";
-    } else {
-        $message = "Error updating record: " . $conn->error;
+        if ($conn->query($stmt) === TRUE) {
+            $message = "Booking accepted successfully. Trip started.";
+        } else {
+            $message = "Error updating record: " . $conn->error;
+        }
     }
 }
 ?>

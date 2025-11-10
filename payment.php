@@ -15,12 +15,12 @@ if (!$user) {
     exit();
 }
 
-$user_id  = $user['User_ID'];
+$user_id = $user['User_ID'];
 
-//latest unpaid trip
-$tripData = LatestUnpaidTrip($user_id);
+// Get all unpaid trips instead of just the latest one
+$allUnpaidTrips = getAllUnpaidTrips($user_id); // You'll need to create this function in db.php
 
-if (!$tripData) {
+if (empty($allUnpaidTrips)) {
     echo "
     <!DOCTYPE html>
     <html>
@@ -45,6 +45,10 @@ if (!$tripData) {
     exit();
 }
 
+// If trip_id is selected, show that trip's details
+$selectedTripId = isset($_GET['trip_id']) ? $_GET['trip_id'] : $allUnpaidTrips[0]['trip_id'];
+$tripData = getTripById($selectedTripId); // You'll need to create this function in db.php
+
 $tripId        = htmlspecialchars($tripData['trip_id']);
 $bookingNumber = htmlspecialchars($tripData['booking_number']);
 $distanceKm    = htmlspecialchars($tripData['distance_km']);
@@ -64,6 +68,21 @@ $fareAmount    = number_format((float)$tripData['fare_amount'], 2);
             <div class="mb-6">
                 <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Payment</h1>
                 <p class="text-neutral-400 mt-1">Review your booking details and choose a payment method.</p>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium mb-2">Select Trip to Pay</label>
+                <select id="tripSelector" onchange="window.location.href='payment.php?trip_id='+this.value" 
+                        class="w-full rounded-2xl border border-neutral-800 bg-black/40 px-4 py-3 outline-none focus:ring-2 focus:ring-yellow-300/60">
+                    <?php foreach ($allUnpaidTrips as $trip): ?>
+                        <option value="<?php echo htmlspecialchars($trip['trip_id']); ?>" 
+                                <?php echo ($trip['trip_id'] == $selectedTripId) ? 'selected' : ''; ?>>
+                            Trip #<?php echo htmlspecialchars($trip['trip_id']); ?> - 
+                            RM <?php echo number_format((float)$trip['fare_amount'], 2); ?> - 
+                            <?php echo htmlspecialchars($trip['created_at']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
