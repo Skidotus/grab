@@ -7,6 +7,9 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 $email = $_SESSION['email'];
+
+// Get the number of bookings for the user
+$total_bookings = count_user_bookings($email);
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +60,7 @@ $email = $_SESSION['email'];
                     <!-- Bookings History -->
                     <div class="rounded-2xl border border-neutral-800 bg-black/30 p-6 shadow-lg hover:shadow-yellow-300/10 transition">
                         <h3 class="text-lg font-semibold mb-2 text-yellow-300">Bookings History</h3>
-                        <p class="text-neutral-400">0</p>
+                        <p class="text-neutral-400"><?php echo $total_bookings; ?></p> <!-- Display total bookings -->
                     </div>
                     <!-- Account Status -->
                     <div class="rounded-2xl border border-neutral-800 bg-black/30 p-6 shadow-lg hover:shadow-yellow-300/10 transition">

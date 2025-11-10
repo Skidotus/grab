@@ -257,4 +257,30 @@ function getTripById($trip_id) {
     
     return $result->fetch_assoc();
 }
+function count_user_bookings($user_email) {
+    global $conn;
+
+    // First, get the User_ID based on the email
+    $sql = "SELECT User_ID FROM user_creds WHERE User_Email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $user_id = $user['User_ID']; // Use User_ID instead of id
+
+        // Now count the bookings for this User_ID
+        $sql = "SELECT COUNT(*) AS total_bookings FROM booking WHERE User_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        return $data['total_bookings'];
+    } else {
+        return 0; // No user found
+    }
+}
 ?>
